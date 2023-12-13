@@ -32,8 +32,8 @@ public class Person implements UserDetails {
 
 
     private Long PersonId;
-    private String FirstName;
-    private String LastName;
+    private String firstName;
+    private String lastName;
     private String password;
     private String email;
     private String phoneNumber;

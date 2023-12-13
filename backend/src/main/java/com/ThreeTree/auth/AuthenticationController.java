@@ -8,19 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping()
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+        System.out.println("Received registration request: " + request.toString());
         return ResponseEntity.ok(service.register(request));
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/api/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        System.out.println("Received registration request: " + request.toString());
         return ResponseEntity.ok(service.authenticate(request));
     }
 }

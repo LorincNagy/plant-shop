@@ -9,32 +9,40 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final PersonRepository repository;
+    private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder; // TODO: has to be final to be picked up by constructor
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
 
-        var person = Person.builder()
-                .FirstName(request.getFirstName())
-                .LastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))//Bcrypt algoritmust
-                .role((Role.USER))
-                .build();
+        Person person = new Person();
+        person.setFirstName(request.getFirstName());
+        person.setLastName(request.getLastName());
 
-        repository.save(person);
+        // Kódoljuk a jelszót a passwordEncoder segítségével
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        person.setPassword(encodedPassword);
+
+        person.setEmail(request.getEmail());
+        person.setPhoneNumber(request.getPhoneNumber());
+        person.setAddress(request.getAddress());
+
+        personRepository.save(person);
+
         var jwtToken = jwtService.generateToken(person);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
+
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
@@ -44,7 +52,7 @@ public class AuthenticationService {
                 )
         );
 
-        var person = repository.findByEmail(request.getEmail())
+        var person = personRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(person);
         return AuthenticationResponse.builder()

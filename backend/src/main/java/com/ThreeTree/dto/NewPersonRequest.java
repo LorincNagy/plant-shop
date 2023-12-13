@@ -1,9 +1,10 @@
 package com.ThreeTree.dto;
 
-public record NewPersonRequest(String FirstName,
-                               String LastName,
-                               String address,
+public record NewPersonRequest(String firstName,
+                               String lastName,
                                String email,
-                               String phoneNumber
+                               String phoneNumber,
+                               String address,
+                               String password
 ) {
 }

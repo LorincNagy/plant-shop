@@ -28,8 +28,8 @@ public class PersonService {
 
     public void saveCustomer(NewPersonRequest request) {
         Person person = new Person();
-        person.setFirstName(request.FirstName());
-        person.setLastName(request.LastName());
+        person.setFirstName(request.firstName());
+        person.setLastName(request.lastName());
         person.setEmail(request.email());
         person.setAddress(request.address());
         person.setPhoneNumber(request.phoneNumber());
