@@ -1,3 +1,4 @@
+// eslint-disable-next-line @mui/material/known-as-property
 /*import * as React from 'react';
 
 import Grid from '@mui/material/Grid';
