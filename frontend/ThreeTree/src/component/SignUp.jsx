@@ -55,12 +55,14 @@ export default function SignUp() {
         },
         body: JSON.stringify(requestBody),
       });
-      
+
       if (!response.ok) {
         throw new Error("ERROR: Failed to send request to server.");
       } else {
         console.log("Successfully sent request to server.");
-        console.log("haha");
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
+
         // Átirányítás a bejelentkezési oldalra
         window.location.href = "/signin";
       }

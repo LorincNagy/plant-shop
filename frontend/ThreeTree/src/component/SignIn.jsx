@@ -55,7 +55,10 @@ async function submitForm(event) {
       throw new Error("ERROR: Failed to send request to server.");
     } else {
       console.log("Successfully sent request to server.");
-      window.location.href = "/";
+      const data = await response.json();
+      // Token a válaszból jön, mentés a localStorage-ban
+      localStorage.setItem("token", data.token);
+      window.location.href = "/products"; // Átirányítás a védett oldalra
     }
   } catch (error) {
     console.error("Failed to send request:", error);
@@ -102,7 +105,7 @@ export default function SignIn() {
               color: "white",
             }}
           >
-            Plantify
+            {/* Plantify */}
           </Box>
         </Grid>
         <Grid
