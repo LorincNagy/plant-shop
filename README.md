@@ -40,5 +40,7 @@ Material UI
 ## Backend:
 Spring Boot
 Spring Data JPA
+JPA (Java Persistence API)
+Hibernate
 PostgreSQL
 
