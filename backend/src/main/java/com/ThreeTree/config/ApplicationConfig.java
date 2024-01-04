@@ -44,3 +44,14 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+//A UserDetailsService interfész alapvetően a Spring Security része, és a Spring biztosít egy alapértelmezett implementációt, amely használható az alkalmazásban. Az alapértelmezett implementáció általában az alkalmazás saját adatbázisából vagy adatforrásából kinyeri a felhasználói adatokat és azokat felhasználja az autentikációhoz.
+
+//Azáltal, hogy létrehozol egy saját UserDetailsService bean-t, felülírod az alapértelmezett implementációt, és azt mondod meg a Spring Securitynek, hogy használja a saját UserDetailsService-edet az autentikációhoz. A példában szereplő kód az UserDetailsService-et implementálja úgy, hogy egy adott felhasználói e-mail alapján keresse meg a felhasználót a repository segítségével.
+
+//Tehát amikor a kód használja ezt a UserDetailsService-t az autentikáció során, a Spring Security a te implementációd fogja használni annak érdekében, hogy megtalálja a felhasználót az e-mail alapján, majd ezt az információt felhasználja az autentikáció során.
+
+//public interface PersonRepository extends JpaRepository<Person, Long> {
+//
+//    Optional<Person> findByEmail(String email);
+//}

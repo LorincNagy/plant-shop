@@ -3,41 +3,36 @@ services:
   backend:
     container_name: threetree-backend
     build:
-      context: .
+      context: ./backend
       dockerfile: DockerfileBackend
     ports:
       - "8080:8080"
-    networks:
-      - db
-    restart: unless-stopped
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
 
   frontend:
     container_name: threetree-frontend
     build:
-      context: ../frontend
-      dockerfile: DockerfileFrontend  # Módosítva: DockerfileFrontend-re
+      context: ./frontend
+      dockerfile: DockerfileFrontend
     ports:
-      - "3000:3000"
-    networks:
-      - db
-    restart: unless-stopped
+      - "5173:5173"
+
 
   db:
     container_name: threetree
-    image: postgres
+    image: postgres:latest
     environment:
       POSTGRES_DB: customer
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /data/postgres
     volumes:
-      - db:/data/postgres
+      - /data/postgres
     ports:
       - "5532:5432"
-    networks:
-      - db
-    restart: unless-stopped
-networks:
-  db:
-volumes:
-  db:
+
