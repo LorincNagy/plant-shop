@@ -1,20 +1,20 @@
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as React from "react";
-import { useEffect, useState } from "react";
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
 import PaginationControlled from "./PaginationControlled.jsx";
-import { color } from "@mui/system";
+import { useCart } from "./CartProvider";
 
 function Copyright() {
   return (
@@ -35,12 +35,10 @@ const fetchProducts = async () => {
   const token = localStorage.getItem("token");
   if (!token) {
     console.error("Nincs token a localStorage-ban.");
-    // Itt további kezelés, például átirányítás vagy hibaüzenet lehet.
     return null;
   }
 
   try {
-    // Token elküldése a /api/products végpontra az Authorization fejlécben
     const response = await fetch("/api/products", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,7 +53,6 @@ const fetchProducts = async () => {
     return products;
   } catch (error) {
     console.error("Hiba történt a termékek lekérése során:", error);
-    // Itt további hibakezelést vagy hibaüzeneteket kezelhetsz.
     return null;
   }
 };
@@ -63,32 +60,57 @@ const fetchProducts = async () => {
 function displayProducts(products, page, pageSize) {
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  return products.slice(startIndex, endIndex);
+  return products.slice(startIndex, endIndex).map((product) => ({
+    ...product,
+    id: product.productId,
+    quantity: 0,
+  }));
 }
 
 const pageSize = 9;
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
+  const { cartitems, setCartItems } = useCart();
+
+  const handleQuantityChange = (id, newValue) => {
+    const updatedProducts = products.map((product) =>
+      product.id === id ? { ...product, quantity: newValue } : product
+    );
+    setProducts(updatedProducts);
+  };
+
+  const handleAddToCart = (product) => {
+    if (product.quantity > 0) {
+      // Hozzáadjuk a terméket annyi példányszámban, amennyit a 'quantity' mezőben megadtak
+      const updatedCartItems = [...cartitems];
+      for (let i = 0; i < product.quantity; i++) {
+        updatedCartItems.push(product);
+      }
+      // Frissítjük a 'cartitems' állapotot
+      setCartItems(updatedCartItems);
+    }
+  };
+
+
+
   const handleChange = (event, value) => {
     setPage(value);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const products = await fetchProducts();
-      setProducts(products);
-    };
-
-    fetchData();
-  }, []);
+    fetchProducts().then((data) => {
+      if (data) {
+        setProducts(displayProducts(data, page, pageSize));
+      }
+    });
+  }, [page]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <main>
-        {/* Hero unit */}
         <Box
           sx={{
             backgroundImage: `url('https://images.unsplash.com/photo-1603912699214-92627f304eb6?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2825')`,
@@ -104,9 +126,9 @@ export default function Products() {
             sx={{
               textAlign: "center",
               position: "absolute",
-              top: "22%", // Position the text in the middle vertically
-              left: "50%", // Position the text in the middle horizontally
-              transform: "translate(-50%, -50%)", // Center the text
+              top: "22%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
               zIndex: 1,
               fontFamily: "Murray Text",
               fontSize: "16.5em",
@@ -120,20 +142,20 @@ export default function Products() {
           </Typography>
           <Typography
             sx={{
-              position: "fixed", // This makes the element fixed on the viewport
-              top: 0, // This positions the button at the top of the viewport
-              right: 0, // This positions the button to the far right of the viewport
-              zIndex: 1, // This ensures the button appears above other content
-              padding: "1em", // Add some spacing from the top and right edges
+              position: "fixed",
+              top: 0,
+              right: 0,
+              zIndex: 1,
+              padding: "1em",
             }}
           >
+            {" "}
             <Button
               color="primary"
               size="large"
               variant="contained"
-              onClick={() => {
-                window.location.href = "/CheckOut";
-              }}
+              component={RouterLink}
+              to="/cart" // A cart oldalra navigálás
             >
               Cart
             </Button>
@@ -162,8 +184,14 @@ export default function Products() {
 
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={7}>
-            {displayProducts(products, page, pageSize).map((product) => (
-              <Grid item key={product.productId} xs={12} sm={6} md={4}>
+            {products.map((product) => (
+              <Grid
+                item
+                key={`product_${product.id}`} // Itt hozzáadtuk az egyedi kulcsot
+                xs={12}
+                sm={6}
+                md={4}
+              >
                 <Card
                   sx={{
                     height: "100%",
@@ -187,8 +215,13 @@ export default function Products() {
                   <TextField
                     label="Quantity"
                     type="number"
-                    value={0}
-                    onChange={() => {}}
+                    value={product.quantity}
+                    onChange={(e) =>
+                      handleQuantityChange(
+                        product.id,
+                        parseInt(e.target.value, 10)
+                      )
+                    }
                     inputProps={{
                       min: 0,
                       step: 1,
@@ -196,7 +229,12 @@ export default function Products() {
                     }}
                   />
                   <CardActions>
-                    <Button size="small">Add to Cart</Button>
+                    <Button
+                      size="small"
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
                   </CardActions>
                 </Card>
               </Grid>
@@ -226,7 +264,7 @@ export default function Products() {
         </Typography>
         <Copyright />
       </Box>
-      {/* End footer */}
+      {/* <Cart cartItems={cartItems} handleRemoveFromCart={handleRemoveFromCart} /> */}
     </ThemeProvider>
   );
 }

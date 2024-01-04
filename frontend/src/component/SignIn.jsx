@@ -12,15 +12,12 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Link as RouterLink, useNavigate } from "react-router-dom"; 
+
 
 function Copyright(props) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Plantify
@@ -33,39 +30,43 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-async function submitForm(event) {
-  event.preventDefault();
-  const data = new FormData(event.target);
+export default function SignIn() {
+  const navigate = useNavigate();
 
-  const requestBody = {
-    email: data.get("email"),
-    password: data.get("password"),
+  const submitForm = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+
+    const requestBody = {
+      email: data.get("email"),
+      password: data.get("password"),
+    };
+
+    try {
+      const response = await fetch("/api/authenticate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error("ERROR: Failed to send request to server.");
+      } else {
+        console.log("Successfully sent request to server.");
+        const data = await response.json();
+        // Token a válaszból jön, mentés a localStorage-ban
+        localStorage.setItem("token", data.token);
+        // Átirányítás a védett oldalra
+        // window.location.href = "/products"; // Eredeti átirányítás
+        navigate("/products");
+      }
+    } catch (error) {
+      console.error("Failed to send request:", error);
+    }
   };
 
-  try {
-    const response = await fetch("/api/authenticate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      throw new Error("ERROR: Failed to send request to server.");
-    } else {
-      console.log("Successfully sent request to server.");
-      const data = await response.json();
-      // Token a válaszból jön, mentés a localStorage-ban
-      localStorage.setItem("token", data.token);
-      window.location.href = "/products"; // Átirányítás a védett oldalra
-    }
-  } catch (error) {
-    console.error("Failed to send request:", error);
-  }
-}
-
-export default function SignIn() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -133,12 +134,7 @@ export default function SignIn() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={submitForm}
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" noValidate onSubmit={submitForm} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -178,7 +174,7 @@ export default function SignIn() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/signup" variant="body2">
+                  <Link component={RouterLink} to="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

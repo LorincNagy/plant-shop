@@ -6,14 +6,16 @@ COPY package-lock.json ./
 RUN npm install
 COPY . .
 RUN npm run build
+CMD ["npm", "run","dev"]
 
-# BUILD EXPRESS FRONTEND SERVER:
-FROM node:18.14.0-alpine as express-server
-WORKDIR /app/express-server
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
-COPY frontendexpressserver/server.js .
-COPY --from=frontend /app/frontend/dist ./static
-EXPOSE 3000
-CMD ["node", "server.js"]
+## BUILD EXPRESS FRONTEND SERVER:
+#FROM node:18.14.0-alpine as express-server
+#WORKDIR /app/express-server
+#COPY package.json ./
+#COPY package-lock.json ./
+#RUN npm install
+#COPY server.js .
+#COPY --from=frontend /app/frontend/dist ./static
+#EXPOSE 3000
+#CMD ["node", "server.js"]
+

@@ -27,8 +27,8 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: customer
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Stifler89!
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /data/postgres
     volumes:
       - db:/data/postgres

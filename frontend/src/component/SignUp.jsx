@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -31,9 +32,48 @@ function Copyright(props) {
   );
 }
 
+function getPasswordStrength(password) {
+  const passwordStrength = {
+    minLength: password.length >= 8,
+    hasUppercase: /[A-Z]/.test(password),
+    hasLowercase: /[a-z]/.test(password),
+    hasNumber: /\d/.test(password),
+  };
+
+  return passwordStrength;
+}
+
+function getPasswordStrengthMessage(passwordStrength) {
+  if (
+    passwordStrength.minLength &&
+    passwordStrength.hasUppercase &&
+    passwordStrength.hasLowercase &&
+    passwordStrength.hasNumber
+  ) {
+    return "Strong";
+  } else if (
+    passwordStrength.minLength &&
+    (passwordStrength.hasUppercase ||
+      passwordStrength.hasLowercase ||
+      passwordStrength.hasNumber)
+  ) {
+    return "Moderate";
+  } else {
+    return "Weak";
+  }
+}
+
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const navigate = useNavigate();
+  const [passwordStrength, setPasswordStrength] = React.useState({
+    minLength: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+  });
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -57,6 +97,7 @@ export default function SignUp() {
       });
 
       if (!response.ok) {
+        alert("This email address is already registered.");
         throw new Error("ERROR: Failed to send request to server.");
       } else {
         console.log("Successfully sent request to server.");
@@ -64,12 +105,20 @@ export default function SignUp() {
         localStorage.setItem("token", data.token);
 
         // Átirányítás a bejelentkezési oldalra
-        window.location.href = "/signin";
+        navigate("/signin");
       }
     } catch (error) {
       console.error("Failed to send request:", error);
     }
   };
+
+  const handlePasswordChange = (event) => {
+    const password = event.target.value;
+    const strength = getPasswordStrength(password);
+    setPasswordStrength(strength);
+  };
+
+  const passwordStrengthMessage = getPasswordStrengthMessage(passwordStrength);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -118,7 +167,7 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                name="firstName" // Javítva "First Name"-ről "firstName"-re
+                name="firstName"
                 label="First Name"
                 type="text"
                 id="firstName"
@@ -128,7 +177,7 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                name="lastName" // Javítva "Last Name"-ről "lastName"-re
+                name="lastName"
                 label="Last Name"
                 type="text"
                 id="lastName"
@@ -138,7 +187,7 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                name="address" // Itt nincs szükség változtatásra
+                name="address"
                 label="Address"
                 type="text"
                 id="address"
@@ -148,7 +197,7 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                name="email" // Itt nincs szükség változtatásra
+                name="email"
                 label="Email Address"
                 type="text"
                 id="email"
@@ -158,7 +207,7 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                name="phoneNumber" // Javítva "Phone Number"-ről "phoneNumber"-re
+                name="phoneNumber"
                 label="Phone Number"
                 type="text"
                 id="phoneNumber"
@@ -168,12 +217,14 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                name="password" // Itt nincs szükség változtatásra
+                name="password"
                 label="Password"
-                type="password" // Javítva a típus "text"-ről "password"-ra
+                type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={handlePasswordChange}
               />
+              <p>Password Strength: {passwordStrengthMessage}</p>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -189,9 +240,6 @@ export default function SignUp() {
                   mt: 5,
                   mb: 3,
                   ml: 3.8,
-                }}
-                onClick={() => {
-                  console.log("Hello"); // Kiírja a "Hello" üzenetet
                 }}
               >
                 Sign Up
