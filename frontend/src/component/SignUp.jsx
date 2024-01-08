@@ -63,7 +63,13 @@ function getPasswordStrengthMessage(passwordStrength) {
   }
 }
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#FF5733", // Narancssárga szín beállítása
+    },
+  },
+});
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -141,7 +147,7 @@ export default function SignUp() {
           <Box
             sx={{
               width: "100%",
-              backgroundColor: "darkgrey",
+              backgroundColor: "#ffe0b2", // A háttérszín beállítása
               marginTop: 1,
               display: "flex",
               flexDirection: "column",
@@ -151,7 +157,7 @@ export default function SignUp() {
               boxShadow: "0px 10px 20px 0px rgba(0,0,0,1)",
             }}
           >
-            <Avatar sx={{ m: 1, color: "black" }}>
+            <Avatar sx={{ m: 1, bgcolor: "black" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -234,12 +240,15 @@ export default function SignUp() {
                 fullWidth
                 variant="contained"
                 sx={{
-                  width: "46%",
-                  height: "2.8em",
-                  mx: "auto",
-                  mt: 5,
-                  mb: 3,
-                  ml: 3.8,
+                  width: "auto", // Automatikus szélesség a tartalomhoz igazítva
+                  height: "2.5em", // A gomb magassága
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: "#000000",
+                  color: "#ffffff",
+                  "&:hover": {
+                    backgroundColor: "#FF5733",
+                  },
                 }}
               >
                 Sign Up

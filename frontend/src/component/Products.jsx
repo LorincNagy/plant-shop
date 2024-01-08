@@ -69,18 +69,13 @@ const fetchProducts = async () => {
 function displayProducts(products, page, pageSize) {
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  return products.slice(startIndex, endIndex).map((product) => ({
-    ...product,
-    id: product.productId,
-    quantity: 0,
-  }));
+  return products.slice(startIndex, endIndex);
 }
 
 const pageSize = 9;
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  console.log(products);
   const [page, setPage] = useState(1);
   const { cartitems, setCartItems } = useCart();
 
@@ -110,11 +105,14 @@ export default function Products() {
   useEffect(() => {
     fetchProducts().then((data) => {
       if (data) {
-        setProducts(displayProducts(data, page, pageSize));
+        setProducts(data);
       }
     });
-  }, []);
+  }, [page]);
 
+  // Oldalváltásnál csak a jelenlegi oldalon lévő termékeket jelenítjük meg
+  const displayedProducts = displayProducts(products, page, pageSize);
+  
   return (
     <ThemeProvider theme={customTheme}>
       <CssBaseline />
@@ -176,26 +174,6 @@ export default function Products() {
           </Typography>
         </Box>
 
-        {/* <Container maxWidth="sm">
-          <Typography
-            component="h1"
-            variant="h2"
-            align="center"
-            color="#616161"
-            gutterBottom
-            sx={{
-              mt: 8,
-              fontFamily: "Murray Text",
-              fontSize: "5em",
-              textShadow: "0px 4px 4px rgba(0, 0, 0, 3)",
-              fontWeight: "Medium",
-              width: "100%",
-            }}
-          >
-            Choose Your Plant
-          </Typography>
-        </Container> */}
-
         <Container
           sx={{
             py: 4, // Itt állítsd be a kívánt padding értéket
@@ -207,10 +185,10 @@ export default function Products() {
           maxWidth="md"
         >
           <Grid container spacing={7}>
-            {products.map((product) => (
+            {displayedProducts.map((product, index) => (
               <Grid
                 item
-                key={`product_${product.id}`} // Itt hozzáadtuk az egyedi kulcsot
+                key={`product_${product.id}_${index}`} // Egyedi kulcs az index hozzáadásával
                 xs={12}
                 sm={6}
                 md={4}
