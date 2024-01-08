@@ -86,21 +86,30 @@ export default function Products() {
   const { cartitems, setCartItems } = useCart();
   const [productQuantities, setProductQuantities] = useState({});
 
-  const handleQuantityChange = (id, newValue) => {
+  const handleQuantityChange = (productId, newValue) => {
     setProductQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [id]: newValue,
+      [productId]: newValue,
     }));
   };
 
   const handleAddToCart = (product) => {
-    const quantityToAdd = productQuantities[product.id] || 0;
-    if (quantityToAdd > 0) {
-      const productToAdd = { ...product, quantity: quantityToAdd };
-      const updatedCartItems = [...cartitems, productToAdd];
+    const quantity = productQuantities[product.productId] || 0;
+  
+    if (quantity > 0) {
+      // Készítünk egy új példányt a termékből, annyiszor, amennyi a mennyiség mezőben van
+      const newCartItems = [];
+      for (let i = 0; i < quantity; i++) {
+        newCartItems.push(product);
+      }
+  
+      // Frissítjük a 'cartitems' állapotot az új elemekkel
+      const updatedCartItems = [...cartitems, ...newCartItems];
       setCartItems(updatedCartItems);
     }
   };
+  
+  
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -223,15 +232,15 @@ export default function Products() {
                   <TextField
                     label="Quantity"
                     type="number"
-                    value={productQuantities[product.id] || 0}
+                    value={productQuantities[product.productId] || 0}
                     onChange={(e) =>
                       handleQuantityChange(
-                        product.id,
+                        product.productId,
                         parseInt(e.target.value, 10)
                       )
                     }
-                    inputProps={{ min: 0, step: 1, inputMode: "numeric" }}
                   />
+
                   <CardActions>
                     <Button
                       size="small"
