@@ -12,14 +12,22 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link as RouterLink, useNavigate } from "react-router-dom"; 
-
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+      sx={{
+        color: "#000000", // Fekete szín beállítása
+        marginTop: "20px", // Például a szöveg kicsit lejjebb helyezése
+      }}
+    >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="#000000" href="https://mui.com/">
         Plantify
       </Link>{" "}
       {new Date().getFullYear()}
@@ -28,7 +36,13 @@ function Copyright(props) {
   );
 }
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#FF5733", // Narancssárga szín beállítása
+    },
+  },
+});
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -105,9 +119,7 @@ export default function SignIn() {
               width: "100%",
               color: "white",
             }}
-          >
-            {/* Plantify */}
-          </Box>
+          ></Box>
         </Grid>
         <Grid
           item
@@ -117,7 +129,12 @@ export default function SignIn() {
           component={Paper}
           elevation={6}
           square
-          bgcolor={"darkgrey"}
+          sx={{
+            backgroundColor: "#ffe0b2", // A háttérszín beállítása
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
           <Box
             sx={{
@@ -134,7 +151,12 @@ export default function SignIn() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={submitForm} sx={{ mt: 1 }}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={submitForm}
+              sx={{ mt: 1 }}
+            >
               <TextField
                 margin="normal"
                 required
@@ -144,6 +166,15 @@ export default function SignIn() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                InputProps={{
+                  sx: {
+                    "&:focus": {
+                      backgroundColor: "#FF5733", // Narancssárga háttérszín beállítása kattintáskor
+                      borderColor: "#FF5733", // Narancssárga keret beállítása kattintáskor
+                      color: "#000000", // Fekete szöveg beállítása kattintáskor
+                    },
+                  },
+                }}
               />
               <TextField
                 margin="normal"
@@ -154,6 +185,15 @@ export default function SignIn() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                InputProps={{
+                  sx: {
+                    "&:focus": {
+                      backgroundColor: "#FF5733", // Narancssárga háttérszín beállítása kattintáskor
+                      borderColor: "#FF5733", // Narancssárga keret beállítása kattintáskor
+                      color: "#000000", // Fekete szöveg beállítása kattintáskor
+                    },
+                  },
+                }}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -163,27 +203,40 @@ export default function SignIn() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: "#000000", // Alapértelmezett fekete háttérszín beállítása
+                  color: "#ffffff", // Fehér szövegszín beállítása
+                  "&:hover": {
+                    backgroundColor: "#FF5733", // Narancssárga háttérszín beállítása, amikor az egér föléviszed
+                  },
+                }}
               >
                 Sign In
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="#" variant="body2" style={{ color: "#212121" }}>
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link component={RouterLink} to="/signup" variant="body2">
+                  <Link
+                    component={RouterLink}
+                    to="/signup"
+                    variant="body2"
+                    style={{ color: "#212121" }}
+                  >
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>
       </Grid>
+      <Copyright />
     </ThemeProvider>
   );
 }

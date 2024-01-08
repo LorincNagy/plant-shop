@@ -31,6 +31,14 @@ function Copyright() {
 
 const defaultTheme = createTheme();
 
+const customTheme = createTheme({
+  palette: {
+    background: {
+      default: "#f9fbe7",
+    },
+  },
+});
+
 const fetchProducts = async () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -50,6 +58,7 @@ const fetchProducts = async () => {
     }
 
     const products = await response.json();
+
     return products;
   } catch (error) {
     console.error("Hiba történt a termékek lekérése során:", error);
@@ -71,6 +80,7 @@ const pageSize = 9;
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+  console.log(products);
   const [page, setPage] = useState(1);
   const { cartitems, setCartItems } = useCart();
 
@@ -93,8 +103,6 @@ export default function Products() {
     }
   };
 
-
-
   const handleChange = (event, value) => {
     setPage(value);
   };
@@ -105,10 +113,10 @@ export default function Products() {
         setProducts(displayProducts(data, page, pageSize));
       }
     });
-  }, [page]);
+  }, []);
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={customTheme}>
       <CssBaseline />
       <main>
         <Box
@@ -122,20 +130,20 @@ export default function Products() {
           <Typography
             component="h1"
             variant="h2"
-            color={"text.white"}
+            color="#ffe0b2"
             sx={{
+              color: "#ffe0b2",
               textAlign: "center",
               position: "absolute",
               top: "22%",
               left: "50%",
               transform: "translate(-50%, -50%)",
               zIndex: 1,
-              fontFamily: "Murray Text",
+              fontFamily: "Roboto",
               fontSize: "16.5em",
               textShadow: "0px 4px 4px rgba(0, 0, 0, 1)",
               fontWeight: "Medium",
               width: "100%",
-              color: "grey",
             }}
           >
             Plantify
@@ -155,19 +163,25 @@ export default function Products() {
               size="large"
               variant="contained"
               component={RouterLink}
-              to="/cart" // A cart oldalra navigálás
+              to="/cart"
+              sx={{
+                backgroundColor: "#FF5733", // Itt állítsd be a kívánt háttérszínt
+                "&:hover": {
+                  backgroundColor: "#FF8040", // Itt állítsd be a hover állapot háttérszínét
+                },
+              }}
             >
               Cart
             </Button>
           </Typography>
         </Box>
 
-        <Container maxWidth="sm">
+        {/* <Container maxWidth="sm">
           <Typography
             component="h1"
             variant="h2"
             align="center"
-            color="text.primary"
+            color="#616161"
             gutterBottom
             sx={{
               mt: 8,
@@ -180,9 +194,18 @@ export default function Products() {
           >
             Choose Your Plant
           </Typography>
-        </Container>
+        </Container> */}
 
-        <Container sx={{ py: 8 }} maxWidth="md">
+        <Container
+          sx={{
+            py: 4, // Itt állítsd be a kívánt padding értéket
+            mt: 4,
+            background: "#ffe0b2",
+            borderRadius: "10px", // Kerekített sarkok
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.9)", // Homályosított árnyék
+          }}
+          maxWidth="md"
+        >
           <Grid container spacing={7}>
             {products.map((product) => (
               <Grid
@@ -197,6 +220,9 @@ export default function Products() {
                     height: "100%",
                     display: "flex",
                     flexDirection: "column",
+                    backgroundColor: "#ffcc80",
+                    borderRadius: "10px",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.8)",
                   }}
                 >
                   <CardMedia
@@ -232,6 +258,13 @@ export default function Products() {
                     <Button
                       size="small"
                       onClick={() => handleAddToCart(product)}
+                      sx={{
+                        backgroundColor: "#FF5733", // Saját háttérszín
+                        color: "#FFFFFF", // Saját szövegszín
+                        "&:hover": {
+                          backgroundColor: "#FF8040", // Saját háttérszín egér fölé helyezéskor
+                        },
+                      }}
                     >
                       Add to Cart
                     </Button>
@@ -249,7 +282,7 @@ export default function Products() {
         </Container>
       </main>
 
-      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+      <Box sx={{ bgcolor: "#ffe0b2", p: 6, mt: 4 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Visit Our Store
         </Typography>
@@ -264,7 +297,6 @@ export default function Products() {
         </Typography>
         <Copyright />
       </Box>
-      {/* <Cart cartItems={cartItems} handleRemoveFromCart={handleRemoveFromCart} /> */}
     </ThemeProvider>
   );
 }
