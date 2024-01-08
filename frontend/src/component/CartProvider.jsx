@@ -13,29 +13,32 @@ export function CartProvider({ children }) {
   }, [cartitems]);
 
   const handleRemoveFromCart = (productId) => {
-    // Kosár elemeinek törlése itt
-    const updatedCartItems = cartitems.filter((item) => item.id !== productId);
-    setCartItems(updatedCartItems);
+ 
+    const indexToRemove = cartitems.findIndex((item) => item.id === productId);
+    if (indexToRemove !== -1) {
+      const updatedCartItems = [...cartitems];
+      updatedCartItems.splice(indexToRemove, 1);
+      setCartItems(updatedCartItems);
+    }
   };
 
   // Egyéb funkciók és állapotok
 
   return (
-    <CartContext.Provider value={{ cartitems, setCartItems, handleRemoveFromCart }}>
+    <CartContext.Provider
+      value={{ cartitems, setCartItems, handleRemoveFromCart }}
+    >
       {children}
     </CartContext.Provider>
   );
 }
 
 export function useCart() {
-  const { cartitems, setCartItems, handleRemoveFromCart } = useContext(CartContext);
+  const { cartitems, setCartItems, handleRemoveFromCart } =
+    useContext(CartContext);
 
   return { cartitems, setCartItems, handleRemoveFromCart };
 }
-
-
-
-
 
 //A CartProvider egy kontextust hoz létre, amely tartalmazza a cartitems és a setCartItems állapotot. Ez a kontextus elérhető lesz a kontextust használó összes gyermek komponens számára. Az állapotot itt inicializálják useState segítségével, és bármely komponens hozzáférhet ehhez az állapothoz, amely a CartProvider gyermekként van elhelyezve.
 

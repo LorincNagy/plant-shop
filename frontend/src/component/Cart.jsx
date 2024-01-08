@@ -36,8 +36,11 @@ export default function Cart() {
         <p>Your cart is empty.</p>
       ) : (
         <div>
-          {cartitems.map((item) => (
-            <Card key={item.id} style={{ marginBottom: "16px" }}>
+          {cartitems.map((item, index) => (
+            <Card
+              key={`cartItem_${item.id}_${index}`}
+              style={{ marginBottom: "16px" }}
+            >
               <CardMedia
                 component="div"
                 sx={{

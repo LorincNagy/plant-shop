@@ -59,7 +59,13 @@ const fetchProducts = async () => {
 
     const products = await response.json();
 
-    return products;
+    // Inicializáljuk a quantity mezőket minden termékhez
+    const productsWithQuantity = products.map((product) => ({
+      ...product,
+      quantity: 0, // Itt inicializálhatod az alapértelmezett értéket
+    }));
+
+    return productsWithQuantity;
   } catch (error) {
     console.error("Hiba történt a termékek lekérése során:", error);
     return null;
@@ -78,22 +84,20 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const { cartitems, setCartItems } = useCart();
+  const [productQuantities, setProductQuantities] = useState({});
 
   const handleQuantityChange = (id, newValue) => {
-    const updatedProducts = products.map((product) =>
-      product.id === id ? { ...product, quantity: newValue } : product
-    );
-    setProducts(updatedProducts);
+    setProductQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [id]: newValue,
+    }));
   };
 
   const handleAddToCart = (product) => {
-    if (product.quantity > 0) {
-      // Hozzáadjuk a terméket annyi példányszámban, amennyit a 'quantity' mezőben megadtak
-      const updatedCartItems = [...cartitems];
-      for (let i = 0; i < product.quantity; i++) {
-        updatedCartItems.push(product);
-      }
-      // Frissítjük a 'cartitems' állapotot
+    const quantityToAdd = productQuantities[product.id] || 0;
+    if (quantityToAdd > 0) {
+      const productToAdd = { ...product, quantity: quantityToAdd };
+      const updatedCartItems = [...cartitems, productToAdd];
       setCartItems(updatedCartItems);
     }
   };
@@ -112,7 +116,7 @@ export default function Products() {
 
   // Oldalváltásnál csak a jelenlegi oldalon lévő termékeket jelenítjük meg
   const displayedProducts = displayProducts(products, page, pageSize);
-  
+
   return (
     <ThemeProvider theme={customTheme}>
       <CssBaseline />
@@ -188,7 +192,7 @@ export default function Products() {
             {displayedProducts.map((product, index) => (
               <Grid
                 item
-                key={`product_${product.id}_${index}`} // Egyedi kulcs az index hozzáadásával
+                key={`product_${product.id}_${index}`} // Concatenate index to product.id for unique key
                 xs={12}
                 sm={6}
                 md={4}
@@ -219,18 +223,14 @@ export default function Products() {
                   <TextField
                     label="Quantity"
                     type="number"
-                    value={product.quantity}
+                    value={productQuantities[product.id] || 0}
                     onChange={(e) =>
                       handleQuantityChange(
                         product.id,
                         parseInt(e.target.value, 10)
                       )
                     }
-                    inputProps={{
-                      min: 0,
-                      step: 1,
-                      inputMode: "numeric",
-                    }}
+                    inputProps={{ min: 0, step: 1, inputMode: "numeric" }}
                   />
                   <CardActions>
                     <Button
