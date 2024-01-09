@@ -29,12 +29,22 @@ function Copyright() {
   );
 }
 
-const defaultTheme = createTheme();
-
 const customTheme = createTheme({
   palette: {
     background: {
       default: "#f9fbe7",
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .focused": {
+            color: "#FF5733 !important",
+            borderColor: "#FF5733 !important",
+          },
+        },
+      },
     },
   },
 });
@@ -95,21 +105,19 @@ export default function Products() {
 
   const handleAddToCart = (product) => {
     const quantity = productQuantities[product.productId] || 0;
-  
+
     if (quantity > 0) {
       // Készítünk egy új példányt a termékből, annyiszor, amennyi a mennyiség mezőben van
       const newCartItems = [];
       for (let i = 0; i < quantity; i++) {
         newCartItems.push(product);
       }
-  
+
       // Frissítjük a 'cartitems' állapotot az új elemekkel
       const updatedCartItems = [...cartitems, ...newCartItems];
       setCartItems(updatedCartItems);
     }
   };
-  
-  
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -239,6 +247,16 @@ export default function Products() {
                         parseInt(e.target.value, 10)
                       )
                     }
+                    InputProps={{
+                      sx: {
+                        "& .MuiInput-input:focus": {
+                          backgroundColor: "#FF5733", // Narancssárga háttérszín fókuszban
+                          color: "#FFFFFF", // Fehér szöveg fókuszban
+                          borderColor: "#FF5733 !important", // Narancssárga keret fókuszban
+                          outline: "none", // Eltávolítja a beépített fókusz keretet
+                        },
+                      },
+                    }}
                   />
 
                   <CardActions>

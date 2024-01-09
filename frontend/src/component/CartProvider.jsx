@@ -12,17 +12,13 @@ export function CartProvider({ children }) {
     localStorage.setItem("cartItems", JSON.stringify(cartitems));
   }, [cartitems]);
 
-  const handleRemoveFromCart = (productId) => {
- 
-    const indexToRemove = cartitems.findIndex((item) => item.id === productId);
-    if (indexToRemove !== -1) {
-      const updatedCartItems = [...cartitems];
-      updatedCartItems.splice(indexToRemove, 1);
-      setCartItems(updatedCartItems);
-    }
+  const handleRemoveFromCart = (index) => {
+    const updatedCartItems = [...cartitems]; 
+    updatedCartItems.splice(index, 1); 
+    setCartItems(updatedCartItems); 
   };
 
-  // Egyéb funkciók és állapotok
+
 
   return (
     <CartContext.Provider
@@ -34,10 +30,13 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  const { cartitems, setCartItems, handleRemoveFromCart } =
-    useContext(CartContext);
+  const {
+    cartitems: contextCartItems,
+    setCartItems,
+    handleRemoveFromCart,
+  } = useContext(CartContext);
 
-  return { cartitems, setCartItems, handleRemoveFromCart };
+  return { cartitems: contextCartItems, setCartItems, handleRemoveFromCart };
 }
 
 //A CartProvider egy kontextust hoz létre, amely tartalmazza a cartitems és a setCartItems állapotot. Ez a kontextus elérhető lesz a kontextust használó összes gyermek komponens számára. Az állapotot itt inicializálják useState segítségével, és bármely komponens hozzáférhet ehhez az állapothoz, amely a CartProvider gyermekként van elhelyezve.
