@@ -4,6 +4,7 @@ import com.ThreeTree.config.JwtService;
 import com.ThreeTree.dao.PersonRepository;
 import com.ThreeTree.model.Person;
 import com.ThreeTree.model.Role;
+import com.ThreeTree.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder; // TODO: has to be final to be picked up by constructor
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
@@ -48,9 +50,15 @@ public class AuthenticationService {
         personRepository.save(person);
 
         var jwtToken = jwtService.generateToken(person);
+        sendRegistrationConfirmationEmail(person);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    private void sendRegistrationConfirmationEmail(Person person) {
+        // Elküldjük a sikeres regisztrációt visszaigazoló e-mailt
+        emailService.sendSimpleEmail(person.getEmail(), "Sikeres Regisztráció", "Kedves " + person.getFirstName() + "! Sikeresen regisztráltál az alkalmazásunkban.");
     }
 
     //authenticationManager.authenticate hívás nem ad vissza közvetlenül egy választ, hanem egy kivételt dob, ha az autentikáció sikertelen
