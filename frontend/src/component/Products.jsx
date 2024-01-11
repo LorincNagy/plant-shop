@@ -199,7 +199,7 @@ export default function Products() {
           sx={{
             py: 4, // Itt állítsd be a kívánt padding értéket
             mt: 4,
-            background: "#ffe0b2",
+            background: "#ffe0b2", // Ezt az értéket adtuk hozzá
             borderRadius: "10px", // Kerekített sarkok
             boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.9)", // Homályosított árnyék
           }}
