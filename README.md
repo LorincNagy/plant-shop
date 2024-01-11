@@ -1,7 +1,21 @@
-# plant-shop - Spring Boot Project
+# Plant-Shop - Spring Boot Project
 
-## Overview
-This project is developed as a web application for efficiently managing orders and purchases of plants. It leverages various technologies, including Spring Boot, Spring Data JPA for backend development, PostgreSQL for database management, and React for the frontend, providing a comprehensive solution for plant ordering and purchasing. Additionally, it has been Dockerized for ease of deployment and management.
+## Project Overview
+The Plant-Shop project is developed as a web application designed to efficiently manage plant orders and purchases. It utilizes a wide range of technologies, including Spring Boot and Spring Data JPA for backend development, PostgreSQL for database management, and React for the frontend. This comprehensive solution offers seamless plant ordering and purchasing capabilities and has been Dockerized for simplified deployment and management.
+
+## Technology Stack
+### Frontend:
+- JavaScript/ES6
+- React
+- HTML/CSS
+- Material UI
+
+### Backend:
+- Spring Boot
+- Spring Data JPA
+- JPA (Java Persistence API)
+- Hibernate
+- PostgreSQL
 
 ## Server side
 
@@ -16,8 +30,9 @@ Create a new database on the PostgreSQL server. For example, you can use the fol
 
 CREATE DATABASE your_database_name;
 
-2. Set Environment Variables at main or in the docker-compose.yml (edit configuration) depends on how to use:
-Configure the following environment variables with the connection details for your project. The application will use these details to connect to the PostgreSQL database.
+"2. Define Environment Variables in the main application or within the docker-compose.yml file (depending on your configuration preference):
+
+Set the following environment variables to configure the connection details required for your project. These details will be used by the application to establish a connection with the PostgreSQL database."
 
    - `SPRING_DATASOURCE_URL`: The URL of your PostgreSQL database, e.g., `jdbc:postgresql://${DB_HOST}:${DB_PORT}/your_database_name`
    - `DB_USERNAME`: Your PostgreSQL database username, e.g., ``
@@ -31,6 +46,7 @@ Configure the following environment variables with the connection details for yo
    Make sure to replace the placeholder values with your actual database and user information.
 
 After setting these environment variables, the application will use them to establish a connection to the PostgreSQL database. Make sure you have configured these variables with the correct values for your project to work as expected.
+
 ### Building and Running the Application
 Change to the '/backend' directory by using the following command:
 cd ./backend
@@ -63,16 +79,4 @@ To run the code, navigate to the "./frontend" directory and execute the followin
 npm run dev
 This will start your frontend using the Vite package on port 5173. You can access the application in your preferred web browser by opening the following URL: http://localhost:5173
 
-# Technology Stack
-## Frontend:
-JavaScript/ES6
-React
-HTML/CSS
-Material UI
-## Backend:
-Spring Boot
-Spring Data JPA
-JPA (Java Persistence API)
-Hibernate
-PostgreSQL
 
