@@ -6,12 +6,31 @@ This project is developed as a web application for efficiently managing orders a
 ## Server side
 
 ### Database Configuration
-Create a PostgreSQL database and set the following environment variables with your database connection details:
+Create the PostgreSQL Database:
 
-SPRING_DATASOURCE_URL: The URL of your PostgreSQL database.
-SPRING_DATASOURCE_USERNAME: Your database username.
-SPRING_DATASOURCE_PASSWORD: Your database password.
+1. Install PostgreSQL if it's not already installed.
+Start the PostgreSQL database server.
+Create a Database:
 
+Create a new database on the PostgreSQL server. For example, you can use the following command in the psql command-line or an admin tool:
+
+CREATE DATABASE your_database_name;
+
+2. Set Environment Variables at main or in the docker-compose.yml (edit configuration) depends on how to use:
+Configure the following environment variables with the connection details for your project. The application will use these details to connect to the PostgreSQL database.
+
+   - `SPRING_DATASOURCE_URL`: The URL of your PostgreSQL database, e.g., `jdbc:postgresql://${DB_HOST}:${DB_PORT}/your_database_name`
+   - `DB_USERNAME`: Your PostgreSQL database username, e.g., ``
+   - `DB_PASSWORD`: Your PostgreSQL database password, e.g., ``
+
+2. Additionally, consider setting any other environment variables that your application may require for proper operation. For example:
+
+   - `USER_EMAIL`: Your user's gmail email address, e.g., ``
+   - `USER_PASSWORD`: Your Google application password for authentication, e.g., ``
+
+   Make sure to replace the placeholder values with your actual database and user information.
+
+After setting these environment variables, the application will use them to establish a connection to the PostgreSQL database. Make sure you have configured these variables with the correct values for your project to work as expected.
 ### Building and Running the Application
 Change to the '/backend' directory by using the following command:
 cd ./backend
