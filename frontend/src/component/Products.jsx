@@ -132,12 +132,12 @@ export default function Products() {
 
   const handleAddToCart = (product) => {
     const quantity = productQuantities[product.productId] || 0;
-  
+    
     if (quantity > 0) {
       console.log("Termék hozzáadása a kosárhoz:", product);
       console.log("Mennyiség:", quantity);
   
-      // Készítünk egy új példányt a termékből, annyiszor, amennyi a mennyiség mezőben van
+      // Készítünk egy új példányt a termékből annyiszor, amennyi a quantity
       const newCartItems = [];
       for (let i = 0; i < quantity; i++) {
         newCartItems.push(product);
@@ -148,9 +148,10 @@ export default function Products() {
       setCartItems(updatedCartItems);
   
       // Elküldjük a kosár tartalmát a backendnek
-      sendCartToBackend(product);
+      sendCartToBackend(newCartItems);
     }
   };
+  
   
 
   const handleChange = (event, value) => {

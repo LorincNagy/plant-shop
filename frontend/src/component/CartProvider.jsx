@@ -16,6 +16,33 @@ export function CartProvider({ children }) {
     const updatedCartItems = [...cartitems];
     updatedCartItems.splice(index, 1);
     setCartItems(updatedCartItems);
+    sendRemoveRequestToBackend(index);
+  };
+
+
+  const sendRemoveRequestToBackend = async (cartItemIndex) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Nincs token a localStorage-ban.");
+        return;
+      }
+  
+      const response = await fetch(`/api/cart/${cartItemIndex}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Hiba történt a törlés során.");
+      }
+  
+      console.log("A termék sikeresen eltávolítva a kosárból.");
+    } catch (error) {
+      console.error("Hiba történt a törlés során:", error);
+    }
   };
 
   const handleEmptyCart = async () => {
