@@ -16,7 +16,6 @@ public class AuthenticationController {
 
     @PostMapping("/api/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        System.out.println("Received registration request: " + request.toString());
         return ResponseEntity.ok(service.register(request));
     }
 

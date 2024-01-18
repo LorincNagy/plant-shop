@@ -13,16 +13,49 @@ export function CartProvider({ children }) {
   }, [cartitems]);
 
   const handleRemoveFromCart = (index) => {
-    const updatedCartItems = [...cartitems]; 
-    updatedCartItems.splice(index, 1); 
-    setCartItems(updatedCartItems); 
+    const updatedCartItems = [...cartitems];
+    updatedCartItems.splice(index, 1);
+    setCartItems(updatedCartItems);
   };
 
+  const handleEmptyCart = async () => {
+    try {
+      // Olvasd ki a tokent (például JWT-t) a localStorage-ból
+      const token = localStorage.getItem("token");
 
+      // Ha nincs token, akkor megfelelően kezeld le (pl. hibakezelés)
+      if (!token) {
+        console.log("No token found.");
+        return;
+      }
+
+      // Elkülded a tokent a szervernek a kérés fejlécében
+      const response = await fetch("/api/cart/empty-cart", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Hozzáadod a tokent a fejléchez
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      // Töröld a localStorage-ban tárolt kosár tartalmat
+      localStorage.removeItem("cartItems");
+
+      const data = await response.json();
+      console.log("Server response:", data);
+      setCartItems([]); // Set an empty cart based on the response
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
 
   return (
     <CartContext.Provider
-      value={{ cartitems, setCartItems, handleRemoveFromCart }}
+      value={{ cartitems, setCartItems, handleRemoveFromCart, handleEmptyCart }}
     >
       {children}
     </CartContext.Provider>
@@ -30,16 +63,36 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  const {
-    cartitems: contextCartItems,
+  const { cartitems, setCartItems, handleRemoveFromCart, handleEmptyCart } =
+    useContext(CartContext);
+
+  return {
+    cartitems,
     setCartItems,
     handleRemoveFromCart,
-  } = useContext(CartContext);
-
-  return { cartitems: contextCartItems, setCartItems, handleRemoveFromCart };
+    handleEmptyCart,
+  };
 }
 
-//A CartProvider egy kontextust hoz létre, amely tartalmazza a cartitems és a setCartItems állapotot. Ez a kontextus elérhető lesz a kontextust használó összes gyermek komponens számára. Az állapotot itt inicializálják useState segítségével, és bármely komponens hozzáférhet ehhez az állapothoz, amely a CartProvider gyermekként van elhelyezve.
+// Ebben a részben a useContext(CartContext) segítségével kinyerjük a CartContext-ből az összes szükséges értéket. Az contextCartItems, setCartItems, handleRemoveFromCart és handleEmptyCart változók most elérhetőek a hookon belül, és ezek a változók mutatnak a CartContext által nyújtott értékekre és funkciókra.
+// A CartProvider egy kontextust hoz létre, amely tartalmazza a cartitems és a setCartItems állapotot. Ez a kontextus elérhető lesz a kontextust használó összes gyermek komponens számára. Az állapotot itt inicializálják useState segítségével, és bármely komponens hozzáférhet ehhez az állapothoz, amely a CartProvider gyermekként van elhelyezve.
+
+// const {
+//   cartitems: contextCartItems,
+//   setCartItems,
+//   handleRemoveFromCart,
+//   handleEmptyCart,
+// } = useContext(CartContext);
+
+// return {
+//   cartitems: contextCartItems,
+//   setCartItems,
+//   handleRemoveFromCart,
+//   handleEmptyCart,
+// };
+// Ebben a részben az objektumot hozzuk létre és adjuk vissza a hookból. Az objektum tartalmazza azokat a változókat és funkciókat, amelyeket a komponensek majd felhasználhatnak, amikor használják a useCart hookot. Az objektum kulcsai, például cartitems, setCartItems, handleRemoveFromCart és handleEmptyCart, a kívánt nevek, amelyekkel hozzáférhetsz ezekhez a dolgokhoz a komponensekben.
+
+// Ez a két rész együtt teszi lehetővé a hook számára, hogy könnyen elérhetővé tegye a CartContext által nyújtott értékeket és funkciókat a komponensek számára.
 
 // A useCart hook használatakor egy adott komponensben, pl. a Products komponensben, hozzáférhetsz a cartitems és setCartItems változókhoz, amelyek a CartProvider által biztosított kontextusból származnak. Tehát a Products komponensben hozzáadhatsz vagy módosíthatsz elemeket a cartitems állapotban, és ezek a változások azonnal elérhetőek lesznek más komponensek számára, például a Cart komponensben is, amely ismételten felhasználja a useCart hookot.
 

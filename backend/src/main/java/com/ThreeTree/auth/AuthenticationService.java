@@ -1,7 +1,9 @@
 package com.ThreeTree.auth;
 
 import com.ThreeTree.config.JwtService;
+import com.ThreeTree.dao.CartRepository;
 import com.ThreeTree.dao.PersonRepository;
+import com.ThreeTree.model.Cart;
 import com.ThreeTree.model.Person;
 import com.ThreeTree.model.Role;
 import com.ThreeTree.service.EmailService;
@@ -24,10 +26,10 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final CartRepository cartRepository;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
-
         Person existingPerson = personRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (existingPerson != null) {
@@ -47,18 +49,24 @@ public class AuthenticationService {
         person.setAddress(request.getAddress());
         person.setRole(Role.USER);
 
-        personRepository.save(person);
+        Cart cart = new Cart();
+        person.setCart(cart); // Beállítod a Person kapcsolatát a Cart-tal
+        personRepository.save(person); // Itt mented a Person objektumot, amihez a Cart is hozzá lesz rendelve
+        cartRepository.save(cart); // Cart objektum mentése az adatbázisba
+
 
         var jwtToken = jwtService.generateToken(person);
         sendRegistrationConfirmationEmail(person);
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
+
     private void sendRegistrationConfirmationEmail(Person person) {
         // Elküldjük a sikeres regisztrációt visszaigazoló e-mailt
-        emailService.sendSimpleEmail(person.getEmail(), "Sikeres Regisztráció", "Kedves " + person.getFirstName() + "! Sikeresen regisztráltál az alkalmazásunkban.");
+        emailService.sendSimpleEmail(person.getEmail(), "Successful Registration", "Dear " + person.getFirstName() + "! You have successfully registered in our application.");
     }
 
     //authenticationManager.authenticate hívás nem ad vissza közvetlenül egy választ, hanem egy kivételt dob, ha az autentikáció sikertelen

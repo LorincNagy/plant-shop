@@ -11,7 +11,7 @@ import Calculator from "./Caculator";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cartitems, handleRemoveFromCart } = useCart();
+  const { cartitems, handleRemoveFromCart, handleEmptyCart } = useCart();
 
   const emptyCartMessage = (
     <Typography
@@ -115,8 +115,8 @@ const Cart = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between", // Elemek közötti teret hagy
-          alignItems: "flex-start", // Bal felső sarokba igazítja az elemeket
+          justifyContent: "space-between",
+          alignItems: "flex-start",
           width: "100%",
           marginTop: "16px",
         }}
@@ -124,25 +124,45 @@ const Cart = () => {
         {/* Calculator komponens */}
         <Calculator cartitems={cartitems} />
 
-        {/* Close Cart gomb */}
-        <Button
-          variant="outlined"
-          color="secondary"
-          onClick={() => {
-            navigate("/products");
-          }}
-          sx={{
-            backgroundColor: "#FF5733",
-            color: "#FFFFFF",
-            "&:hover": {
-              backgroundColor: "#FF8040",
-            },
-          }}
-        >
-          Close Cart
-        </Button>
-      </Box>
+        <div sx={{ display: "flex", gap: "8px" }}>
+          {/* Close Cart gomb */}
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => {
+              navigate("/products");
+            }}
+            sx={{
+              backgroundColor: "#FF5733",
+              color: "#FFFFFF",
+              "&:hover": {
+                backgroundColor: "#FF8040",
+              },
+              marginRight: "8px", // Kis tér hozzáadása a gombok között
+            }}
+          >
+            Close Cart
+          </Button>
 
+          {/* Empty Cart gomb */}
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => {
+              handleEmptyCart(); 
+            }}
+            sx={{
+              backgroundColor: "#FF5733",
+              color: "#FFFFFF",
+              "&:hover": {
+                backgroundColor: "#FF8040",
+              },
+            }}
+          >
+            Empty Cart
+          </Button>
+        </div>
+      </Box>
       <Typography
         variant="h4"
         component="h2"

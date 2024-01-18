@@ -21,17 +21,17 @@ public class Person implements UserDetails {
 
     @Id
     @SequenceGenerator(
-            name = "customer_id_sequence",
-            sequenceName = "customer_id_sequence",
+            name = "person_id_sequence",
+            sequenceName = "person_id_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "customer_id_sequence"
+            generator = "person_id_sequence"
     )
 
 
-    private Long PersonId;
+    private Long id;
     private String firstName;
     private String lastName;
     private String password;
@@ -41,6 +41,10 @@ public class Person implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Cart cart;
+
 
     @JsonManagedReference
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
@@ -81,3 +85,6 @@ public class Person implements UserDetails {
         return true;
     }
 }
+
+
+//Az, hogy melyik osztálynál van a kulcs (pl. person_id vagy cart_id), az attól függ, hogy melyik osztályhoz tartozik az adott kapcsolat. A jelenlegi megvalósítás szerint egy Person objektumhoz tartozik egy Cart objektum, tehát a Cart osztálynál van a kulcs, amely hivatkozik a Person-re.

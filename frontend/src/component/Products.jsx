@@ -103,21 +103,55 @@ export default function Products() {
     }));
   };
 
+  const sendCartToBackend = async (cartItem) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Nincs token a localStorage-ban.");
+        return;
+      }
+
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(cartItem),
+      });
+
+      if (!response.ok) {
+        throw new Error("Hiba történt a kosár elküldése során.");
+      }
+
+      console.log("A kosár sikeresen elküldve a backendnek.");
+    } catch (error) {
+      console.error("Hiba történt a kosár elküldése során:", error);
+    }
+  };
+
   const handleAddToCart = (product) => {
     const quantity = productQuantities[product.productId] || 0;
-
+  
     if (quantity > 0) {
+      console.log("Termék hozzáadása a kosárhoz:", product);
+      console.log("Mennyiség:", quantity);
+  
       // Készítünk egy új példányt a termékből, annyiszor, amennyi a mennyiség mezőben van
       const newCartItems = [];
       for (let i = 0; i < quantity; i++) {
         newCartItems.push(product);
       }
-
+  
       // Frissítjük a 'cartitems' állapotot az új elemekkel
       const updatedCartItems = [...cartitems, ...newCartItems];
       setCartItems(updatedCartItems);
+  
+      // Elküldjük a kosár tartalmát a backendnek
+      sendCartToBackend(product);
     }
   };
+  
 
   const handleChange = (event, value) => {
     setPage(value);
