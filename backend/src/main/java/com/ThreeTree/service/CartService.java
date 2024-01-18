@@ -62,10 +62,8 @@ public class CartService {
             throw new NoSuchElementException("Nincs ilyen indexű termék a kosárban.");
         }
 
-        // Szerezz meg egy referenciát az adott indexű termékre
         Product productToRemove = cart.getProducts().get(cartItemIndex);
 
-        // Távolítsd el az adott terméket a kosárból
         cart.getProducts().remove(productToRemove);
 
         cartRepository.save(cart);

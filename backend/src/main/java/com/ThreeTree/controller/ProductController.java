@@ -1,5 +1,6 @@
 package com.ThreeTree.controller;
 
+import com.ThreeTree.dto.NewProductResponse;
 import com.ThreeTree.model.Product;
 import com.ThreeTree.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<NewProductResponse> getAllProducts() {
         return productService.getProducts();
     }
 
