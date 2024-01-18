@@ -14,6 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -25,30 +26,26 @@ public class CartService {
     private final ProductRepository productRepository;
 
 
-    public void addCartItems(NewCartItemRequest request, Person person) {
+    public void addCartItems(List<NewCartItemRequest> requests, Person person) {
         Cart cart = person.getCart();
 
+        for (NewCartItemRequest request : requests) {
 
-        // Retrieve the existing product by SKU
-        Product existingProduct = getExistingProduct(request);
+            Product existingProduct = getExistingProduct(request);
 
 
-        // Add the products to the cart
-        cart.addProducts(existingProduct);
+            cart.addProducts(existingProduct);
 
-        // Save the cart in the database
+        }
+
         cartRepository.save(cart);
     }
 
+
     private Product getExistingProduct(NewCartItemRequest request) {
-        return productRepository.findBySku(request.sku())
-                .orElseThrow(
-                        () -> new HttpClientErrorException(
-                                HttpStatus.NOT_FOUND,
-                                "Can't find product with SKU: " + request.sku()
-                        )
-                );
+        return productRepository.findBySku(request.sku()).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Can't find product with SKU: " + request.sku()));
     }
+
 
     public void emptyCart(Person person) {
         Cart cart = person.getCart();
@@ -57,6 +54,24 @@ public class CartService {
             cartRepository.save(cart);
         }
     }
+
+    public void removeFromCart(Integer cartItemIndex, Person person) {
+        Cart cart = person.getCart();
+
+        if (cartItemIndex < 0 || cartItemIndex >= cart.getProducts().size()) {
+            throw new NoSuchElementException("Nincs ilyen indexű termék a kosárban.");
+        }
+
+        // Szerezz meg egy referenciát az adott indexű termékre
+        Product productToRemove = cart.getProducts().get(cartItemIndex);
+
+        // Távolítsd el az adott terméket a kosárból
+        cart.getProducts().remove(productToRemove);
+
+        cartRepository.save(cart);
+    }
+
+
 }
 
 
