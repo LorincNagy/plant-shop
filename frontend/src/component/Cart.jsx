@@ -73,6 +73,10 @@ const Cart = () => {
                 <Typography variant="body2" color="text.secondary">
                   Price: {item.price}
                 </Typography>
+                {/* Mennyiség megjelenítése */}
+                <Typography variant="body2" color="text.secondary">
+                  Quantity: {item.quantity}
+                </Typography>
               </CardContent>
               <div
                 sx={{
@@ -149,7 +153,7 @@ const Cart = () => {
             variant="outlined"
             color="secondary"
             onClick={() => {
-              handleEmptyCart(); 
+              handleEmptyCart();
             }}
             sx={{
               backgroundColor: "#FF5733",

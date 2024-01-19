@@ -131,25 +131,39 @@ export default function Products() {
   };
 
   const handleAddToCart = (product) => {
-    const quantity = productQuantities[product.productId] || 0;
+    const existingCartItem = cartitems.find(
+      (item) => item.productId === product.productId
+    );
 
-    if (quantity > 0) {
-      console.log("Termék hozzáadása a kosárhoz:", product);
-      console.log("Mennyiség:", quantity);
+    let updatedCartItems = [];
 
-      // Készítünk egy új példányt a termékből annyiszor, amennyi a quantity
-      const newCartItems = [];
-      for (let i = 0; i < quantity; i++) {
-        newCartItems.push(product);
-      }
-
-      // Frissítjük a 'cartitems' állapotot az új elemekkel
-      const updatedCartItems = [...cartitems, ...newCartItems];
-      setCartItems(updatedCartItems);
-
-      // Elküldjük a kosár tartalmát a backendnek
-      sendCartToBackend(newCartItems);
+    if (existingCartItem) {
+      // Ha a termék már szerepel a kosárban, akkor csak frissítjük a mennyiséget
+      updatedCartItems = cartitems.map((item) =>
+        item.productId === product.productId
+          ? {
+              ...item,
+              quantity: item.quantity + productQuantities[product.productId],
+            }
+          : item
+      );
+    } else {
+      // Ha a termék még nem szerepel a kosárban, hozzáadjuk az összegzett mennyiséget
+      updatedCartItems = [
+        ...cartitems,
+        {
+          ...product,
+          quantity: productQuantities[product.productId],
+        },
+      ];
     }
+
+    setCartItems(updatedCartItems);
+    console.log(updatedCartItems);
+
+    console.log("Termék hozzáadása a kosárhoz:", product);
+    // Elküldjük a kosár tartalmát a backendnek
+    // sendCartToBackend(updatedCartItems);
   };
 
   const handleChange = (event, value) => {

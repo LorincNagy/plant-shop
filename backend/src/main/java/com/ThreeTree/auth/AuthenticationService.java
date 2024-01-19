@@ -50,7 +50,8 @@ public class AuthenticationService {
         person.setRole(Role.USER);
 
         Cart cart = new Cart();
-        person.setCart(cart); // Beállítod a Person kapcsolatát a Cart-tal
+        person.setCart(cart);
+        cart.setPerson(person);
         personRepository.save(person); // Itt mented a Person objektumot, amihez a Cart is hozzá lesz rendelve
         cartRepository.save(cart); // Cart objektum mentése az adatbázisba
 

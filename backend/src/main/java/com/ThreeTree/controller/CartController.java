@@ -45,24 +45,24 @@ public class CartController {
 //        return cartService.getCartItemById(id);
 //    }
 
-    @PostMapping
-    public void addCartItem(@RequestBody List<NewCartItemRequest> request, @AuthenticationPrincipal Person person) {
-        cartService.addCartItems(request, person);
-    }
+//    @PostMapping
+//    public void addCartItem(@RequestBody List<NewCartItemRequest> request, @AuthenticationPrincipal Person person) {
+//        cartService.addCartItems(request, person);
+//    }
+//
+//    @DeleteMapping("/{cartItemIndex}")
+//    public ResponseEntity<String> removeFromCart(@PathVariable Integer cartItemIndex, @AuthenticationPrincipal Person person) {
+//        cartService.removeFromCart(cartItemIndex, person);
+//        return ResponseEntity.ok("Item successfully removed from cart");
+//    }
 
-    @DeleteMapping("/{cartItemIndex}")
-    public ResponseEntity<String> removeFromCart(@PathVariable Integer cartItemIndex, @AuthenticationPrincipal Person person) {
-        cartService.removeFromCart(cartItemIndex, person);
-        return ResponseEntity.ok("Item successfully removed from cart");
-    }
 
-
-    @DeleteMapping("/empty-cart")
-    public ResponseEntity<String> emptyCart(@AuthenticationPrincipal Person person) {
-        cartService.emptyCart(person);
-        return ResponseEntity.ok("{\"message\": \"Cart successfully emptied\"}");
-
-    }
+//    @DeleteMapping("/empty-cart")
+//    public ResponseEntity<String> emptyCart(@AuthenticationPrincipal Person person) {
+//        cartService.emptyCart(person);
+//        return ResponseEntity.ok("{\"message\": \"Cart successfully emptied\"}");
+//
+//    }
 
 }
 

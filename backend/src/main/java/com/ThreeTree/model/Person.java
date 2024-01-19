@@ -20,18 +20,10 @@ import java.util.Set;
 public class Person implements UserDetails {
 
     @Id
-    @SequenceGenerator(
-            name = "person_id_sequence",
-            sequenceName = "person_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "person_id_sequence"
-    )
-
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     private String firstName;
     private String lastName;
     private String password;
@@ -42,13 +34,11 @@ public class Person implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Cart cart;
 
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private Set<Order> orders;
+    @OneToMany(mappedBy = "person")
+    private List<Order> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

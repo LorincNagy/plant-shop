@@ -17,25 +17,14 @@ import java.util.Map;
 public class Order {
 
     @Id
-    @SequenceGenerator(
-            name = "order_id_sequence",
-            sequenceName = "order_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "order_id_sequence"
-    )
-    private Long orderId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private LocalDate orderDate;
     private BigDecimal orderTotal;
 
-
-    @ElementCollection
-    private Map<Product, Integer> productsQuantities;
-
-    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "person_id")
     private Person person;
+
+    @OneToOne
+    private Cart cart;
 }
