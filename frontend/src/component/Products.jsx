@@ -103,7 +103,7 @@ export default function Products() {
     }));
   };
 
-  const sendCartToBackend = async (cartItem) => {
+  const sendCartToBackend = async (cartItems) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -111,13 +111,18 @@ export default function Products() {
         return;
       }
 
+      const itemsToSend = cartItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      }));
+
       const response = await fetch("/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(cartItem),
+        body: JSON.stringify(itemsToSend),
       });
 
       if (!response.ok) {
@@ -138,7 +143,6 @@ export default function Products() {
     let updatedCartItems = [];
 
     if (existingCartItem) {
-      // Ha a termék már szerepel a kosárban, akkor csak frissítjük a mennyiséget
       updatedCartItems = cartitems.map((item) =>
         item.productId === product.productId
           ? {
@@ -148,7 +152,6 @@ export default function Products() {
           : item
       );
     } else {
-      // Ha a termék még nem szerepel a kosárban, hozzáadjuk az összegzett mennyiséget
       updatedCartItems = [
         ...cartitems,
         {
@@ -163,7 +166,7 @@ export default function Products() {
 
     console.log("Termék hozzáadása a kosárhoz:", product);
     // Elküldjük a kosár tartalmát a backendnek
-    // sendCartToBackend(updatedCartItems);
+    sendCartToBackend(updatedCartItems);
   };
 
   const handleChange = (event, value) => {
@@ -282,9 +285,20 @@ export default function Products() {
                     <Typography gutterBottom variant="h5" component="h2">
                       {product.name}
                     </Typography>
-                    <Typography>{product.description}</Typography>
+
+                    <div style={{ marginBottom: "6px" }}></div>
+
+                    <Typography paragraph>{product.description}</Typography>
+
+                    <div style={{ marginBottom: "6px" }}></div>
+
+                    <Typography>Price: {product.price}</Typography>
+
+                    <div style={{ marginBottom: "6px" }}></div>
+
                     <Typography>Available: {product.stock}</Typography>
                   </CardContent>
+
                   <TextField
                     label="Quantity"
                     type="number"

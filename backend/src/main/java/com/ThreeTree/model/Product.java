@@ -1,8 +1,6 @@
 package com.ThreeTree.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,10 +26,6 @@ public class Product {
     private Integer stock;
     private String image;
 
-
-    @ManyToOne
-    @JoinColumn(name = "cart_item_id")
-    private CartItem cartItem;
 
 }
 

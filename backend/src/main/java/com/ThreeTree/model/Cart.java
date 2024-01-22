@@ -25,16 +25,16 @@ public class Cart {
     @JoinColumn(name = "person_id") // Megadható a kapcsoló kulcs neve
     private Person person;
 
-    @OneToMany(mappedBy = "cart")
-    private List<CartItem> cartItems;
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<CartItem> cartItems= new ArrayList<>();
 
     @OneToOne(mappedBy = "cart")
     private Order order;
 
-
-//    public void addProducts(Product cartItem) {
-//        products.add(cartItem);
+//    public void addCartItem(CartItem cartItem) {
+//        cartItems.add(cartItem);
 //    }
+
 
 }
 

@@ -57,7 +57,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 }
 
-
+//A SecurityContextHolder.getContext().getAuthentication() kifejezés arra szolgál, hogy ellenőrizze, hogy az autentikációs objektum már létezik-e a SecurityContextHolder-ben. Ha a felhasználó bejelentkezésnél autentikált, de az autentikációs objektum nincs eltárolva a SecurityContextHolder-ben, akkor az alkalmazás újból autentikálja a felhasználót a JWT alapján.
+//UserDetails egy interfész a Spring Security keretrendszerben, amelyet a felhasználói adatok reprezentálására és kezelésére használnak. Az implementációk feladata az, hogy a felhasználói adatokat biztosítsák a keretrendszer számára. Ezáltal az alkalmazás fejlesztőjének feladata egy UserDetailsService implementáció elkészítése, amely a konkrét adatbázisból vagy adatforrásból szolgáltatja a UserDetails objektumokat.
+//
+//A UserDetailsService egy interfész, amelynek egyetlen metódusa van: loadUserByUsername(String username). Az implementációk ezt a metódust valósítják meg úgy, hogy visszaadják a megadott felhasználónévhez (username) tartozó UserDetails objektumot. Az implementáció felelős az adatbázisból vagy egyéb adatforrásból való adatok lekérdezéséért és azoknak a UserDetails objektumba történő konvertálásáért.
+//
+//A Spring Security konfigurációjában, mint például a JwtAuthenticationFilter-ben látható, a UserDetailsService-t használják fel a felhasználók betöltéséhez és az autentikációs folyamat során. Ebben a példában a loadUserByUsername metódust hívják meg, hogy betöltsék a felhasználót az e-mail cím alapján.
+//
+//Az UserDetails interfész a felhasználói adatokat reprezentálja, de az implementációtól függően ezek az adatok a valós adatbázisból vagy más adatforrásból származhatnak. Az implementáció a fejlesztő feladata, és az alkalmazás saját adatforrásához igazodik. Az implementáció a valós adatbázis lekérdezéseket vagy egyéb adatforrás hozzáférést használhat, hogy megszerezze a szükséges adatokat a felhasználókról.
 //A jwtService.isTokenValid(jwt, userDetails) függvénynek kellene ellenőriznie, hogy a JWT token érvényes-e és megegyezik-e a felhasználó adataival az adatbázisban.
 //
 //A jwtService.isTokenValid(...) függvénynek az alábbiakat kellene végrehajtania:

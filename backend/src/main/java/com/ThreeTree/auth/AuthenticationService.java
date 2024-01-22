@@ -92,7 +92,19 @@ public class AuthenticationService {
     }
 }
 
-
+//A felhasználó megadja az e-mail címét és jelszavát a bejelentkezési űrlapon.
+//
+//Az authenticationManager.authenticate(...) hívás során az alkalmazás ellenőrzi a megadott e-mail címet és jelszót a regisztrált felhasználók között. Ha a bejelentkezési adatok megfelelnek, akkor a felhasználó sikeresen autentikálódik.
+//
+//Miután a felhasználó sikeresen bejelentkezett, az alkalmazás megkeresi a felhasználót az e-mail cím alapján az adatbázisban a personRepository.findByEmail(...) hívással.
+//
+//Miután a felhasználót megtalálta, a kód létrehozza egy JWT-t (jwtToken) a jwtService.generateToken(...) hívással. A JWT tartalmazza az azonosítási információkat, például a felhasználó azonosítóját és jogosultságait.
+//
+//A kód létrehoz egy AuthenticationResponse objektumot, amely tartalmazza a generált JWT-t, majd visszaadja ezt az objektumot a bejelentkezett felhasználónak.
+//
+//A JWT (JSON Web Token) létrejöttével az alkalmazás nem tárolja az autentikációs állapotot a szerver oldalon. A kliens kapja meg a JWT-t, és a későbbi kéréseiben használja, hogy igazolja az azonosítását. Az alkalmazás nem "jegyez meg" semmilyen autentikációs állapotot a felhasználó számára a szerveren, mivel a JWT tartalmazza az azonosítási információkat.
+//
+//Amikor a kliens egy védett erőforráshoz vagy útvonalhoz próbál hozzáférni, a JWT-t az "Authorization" fejlécben küldi a kérésben. Az alkalmazás a JWT-t ellenőrzi az autentikáció során, és ha a JWT érvényes és a felhasználó adatai megegyeznek, akkor az alkalmazás tudja, hogy a felhasználó bejelentkezett és autentikált, és hozzáférést engedélyez a védett erőforráshoz. Az autentikációs állapotot nem kell külön tárolni a szerveren, mivel a JWT tartalmazza az autentikációs adatokat.
 //Az AuthenticationManager a UsernamePasswordAuthenticationToken használja az autentikációhoz, amikor bejelentkezést kezel. Ez az autentikáció a felhasználó által megadott felhasználónév és jelszó alapján történik. Az AuthenticationProvider, amelyet a .authenticationProvider(authenticationProvider) részben beállítottál a konfigurációdban, felelős az autentikáció végrehajtásáért ezen az úton.
 //
 //Amikor védett útra érkezik egy kérés, akkor a JwtAuthenticationFilter lép működésbe, és a JWT token alapján megpróbálja azonosítani a felhasználót. Ha a JWT token érvényes és megfelelő, akkor egy UsernamePasswordAuthenticationToken-t hoz létre az autentikációhoz, amely tartalmazza a felhasználót és a szerepköröket. Ezek az adatok kerülnek átadásra az AuthenticationManager-nek a .authenticationProvider(authenticationProvider) részben beállított AuthenticationProvider-en keresztül a további autentikációs ellenőrzésekhez.
