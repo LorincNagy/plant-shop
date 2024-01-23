@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,8 +59,7 @@ public class OrderService {
         Cart cart = person.getCart();
 
         Order order = new Order();
-        order.setOrderDate(LocalDate.now());
-        System.out.println(request.orderTotal());
+        order.setOrderDate(LocalDateTime.now());
         order.setOrderTotal(request.orderTotal());
 
         order.setPerson(person);

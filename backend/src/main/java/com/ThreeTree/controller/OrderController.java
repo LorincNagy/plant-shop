@@ -40,10 +40,10 @@ public class OrderController {
     }
 
     @PostMapping
-    public void addOrder(@RequestBody NewOrderRequest newOrderRequest,@AuthenticationPrincipal Person person) {
-       orderService.saveOrder(newOrderRequest,person);
+    public void addOrder(@RequestBody NewOrderRequest newOrderRequest, @AuthenticationPrincipal Person person) {
+        System.out.println(newOrderRequest);
+        orderService.saveOrder(newOrderRequest, person);
     }
-
 
 
 }

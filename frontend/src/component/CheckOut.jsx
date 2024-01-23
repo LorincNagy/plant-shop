@@ -20,14 +20,12 @@ function Checkout() {
     phone: "",
   });
 
-  // Állapot létrehozása a kiszámolt összeg számára
   const [totalAmount, setTotalAmount] = useState(0);
 
   const navigate = useNavigate();
 
   // A "Calculator" komponens által számolt összeg beállítása
   const handleCalculatorResult = (result) => {
-    console.log(result);
     setTotalAmount(result);
   };
 
@@ -51,13 +49,16 @@ function Checkout() {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-          },
+          }, //Fontos, hogy a JSON kulcsok megegyezzenek a NewOrderRequest record mezőinek neveivel backenden. Például a totalAmount-ot orderTotal-ként kell küldeni, ha a backend ezt várja.
           body: JSON.stringify({
-            customerInfo: customerInfo,
-            totalAmount: totalAmount,
+            address: customerInfo.address,
+            email: customerInfo.email,
+            phone: customerInfo.phone,
+            orderTotal: totalAmount,
           }),
         });
-
+        console.log(customerInfo);
+        console.log(totalAmount);
         if (response.ok) {
           // A rendelés sikeresen elküldve
           navigate("/thank-you");

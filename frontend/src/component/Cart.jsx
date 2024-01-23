@@ -156,7 +156,6 @@ const Cart = () => {
           marginTop: "16px",
         }}
       >
-        {/* Calculator komponens */}
         <Calculator cartitems={cartitems} />
 
         <div sx={{ display: "flex", gap: "8px" }}>
