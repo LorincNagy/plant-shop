@@ -12,14 +12,18 @@ export function CartProvider({ children }) {
     localStorage.setItem("cartItems", JSON.stringify(cartitems));
   }, [cartitems]);
 
-  const handleRemoveFromCart = (index) => {
+  const handleRemoveFromCart = (productId) => {
+    // Megkeressük az adott productId-jű termék indexét a cartitems-ben
+    const removeItem = cartitems.find(item => item.productId === productId);
+    if (removeItem === -1) return; 
+  
     const updatedCartItems = [...cartitems];
-    updatedCartItems.splice(index, 1);
+    updatedCartItems.splice(removeItem, 1);
     setCartItems(updatedCartItems);
-    sendRemoveRequestToBackend(index);
+    sendRemoveRequestToBackend(productId); 
   };
 
-  const sendRemoveRequestToBackend = async (cartItemIndex) => {
+  const sendRemoveRequestToBackend = async (productId) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -27,7 +31,7 @@ export function CartProvider({ children }) {
         return;
       }
 
-      const response = await fetch(`/api/cart/${cartItemIndex}`, {
+      const response = await fetch(`/api/cart/${productId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -40,8 +40,6 @@ const Cart = () => {
     setCartItems(updatedCartItems);
     sendCartToBackend(updatedCartItems); // Frissítjük a backendet az új kosártartalommal
   };
-  
-  
 
   const cartContent =
     cartitems.length === 0
@@ -119,7 +117,7 @@ const Cart = () => {
                   </Button>
                 </Box>
                 <Button
-                  onClick={() => handleRemoveFromCart(index)}
+                  onClick={() => handleRemoveFromCart(item.productId)} 
                   variant="outlined"
                   color="secondary"
                   sx={{

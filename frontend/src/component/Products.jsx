@@ -94,7 +94,7 @@ const pageSize = 9;
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const { cartitems, setCartItems } = useCart();
+  const { cartitems, setCartItems, sendCartToBackend } = useCart();
   const [productQuantities, setProductQuantities] = useState({});
 
   const handleQuantityChange = (productId, newValue) => {

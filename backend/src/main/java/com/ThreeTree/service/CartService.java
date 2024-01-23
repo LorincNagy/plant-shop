@@ -54,26 +54,37 @@ public class CartService {
     }
 
 
-//    @Transactional
-//    public void removeFromCart(Long cartItemId, Person person) {
-//        Cart cart = person.getCart();
-//
-//        // Keresd meg a CartItem-et az azonosító alapján
-//        CartItem cartItemToRemove = cartItemRepository.findById(cartItemId)
-//                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Nem található ilyen azonosítójú CartItem: " + cartItemId));
-//
-//        // Távolítsd el a CartItem-et a kosárból
-//        cart.getCartItems().remove(cartItemToRemove);
-//
-//        // Távolítsd el a kapcsolatot a Product objektummal
-//        cartItemToRemove.setCart(null);
-//        cartItemToRemove.setProducts(null);
-//
-//        // Távolítsd el a CartItem-et a repository-ból
-//        cartItemRepository.delete(cartItemToRemove);
-//
-//        cartRepository.save(cart);
-//    }
+    @Transactional
+    public void removeFromCart(Long cartItemId, Person person) {
+        Cart cart = person.getCart();
+        CartItem cartItemToRemove = findCartItemById(cartItemId);
+
+        removeCartItemFromCart(cart, cartItemToRemove);
+
+        cartItemToRemove.setCart(null);
+        cartItemToRemove.setProduct(null);
+        cartItemRepository.delete(cartItemToRemove);
+
+        cartRepository.save(cart);
+    }
+
+
+    private CartItem findCartItemById(Long cartItemId) {
+        return cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND,
+                        "Nem található ilyen azonosítójú CartItem: " + cartItemId));
+    }
+
+    private void removeCartItemFromCart(Cart cart, CartItem cartItemToRemove) {
+        CartItem itemToRemove = cart.getCartItems().stream()
+                .filter(item -> item.getId().equals(cartItemToRemove.getId())) // Az equals metódus használata
+                .findFirst()
+                .orElse(null);
+        if (itemToRemove != null) {
+            cart.getCartItems().remove(itemToRemove);
+        }
+    }
+
 
     private Product getExistingProduct(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
@@ -88,4 +99,23 @@ public class CartService {
                 .findFirst()
                 .orElse(null);
     }
+
+    @Transactional
+    public void emptyCart(Person person) {
+        Cart cart = person.getCart();
+
+        // Keresd meg és távolítsd el az összes CartItem-et
+        cart.getCartItems().stream().forEach(cartItem -> {
+            cartItem.setCart(null); // Kapcsolat megszüntetése a Cart és CartItem között
+            cartItem.setProduct(null); // Kapcsolat megszüntetése a Product és CartItem között
+            cartItemRepository.delete(cartItem); // CartItem törlése az adatbázisból
+        });
+
+        // Töröljük a CartItem-eket a Cart objektumból
+        cart.getCartItems().clear();
+
+        // Mentsük el a frissített Cart objektumot
+        cartRepository.save(cart);
+    }
+
 }

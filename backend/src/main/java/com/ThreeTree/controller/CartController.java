@@ -51,19 +51,19 @@ public class CartController {
     }
 
 
-//    @DeleteMapping("/{cartItemId}")
-//    public ResponseEntity<String> removeFromCart(@PathVariable Integer cartItemIndex, @AuthenticationPrincipal Person person) {
-//        cartService.removeFromCart(cartItemId, person);
-//        return ResponseEntity.ok("Item successfully removed from cart");
-//    }
+    @DeleteMapping("/{cartItemID}")
+    public ResponseEntity<String> removeFromCart(@PathVariable Long cartItemID, @AuthenticationPrincipal Person person) {
+        cartService.removeFromCart(cartItemID, person);
+        return ResponseEntity.ok("Item successfully removed from cart");
+    }
 
 
-//    @DeleteMapping("/empty-cart")
-//    public ResponseEntity<String> emptyCart(@AuthenticationPrincipal Person person) {
-//        cartService.emptyCart(person);
-//        return ResponseEntity.ok("{\"message\": \"Cart successfully emptied\"}");
-//
-//    }
+    @DeleteMapping("/empty-cart")
+    public ResponseEntity<String> emptyCart(@AuthenticationPrincipal Person person) {
+        cartService.emptyCart(person);
+        return ResponseEntity.ok("{\"message\": \"Cart successfully emptied\"}");
+
+    }
 
 }
 
