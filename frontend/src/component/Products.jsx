@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -97,43 +98,19 @@ export default function Products() {
   const [productQuantities, setProductQuantities] = useState({});
 
   const handleQuantityChange = (productId, newValue) => {
+    // Ellenőrizzük, hogy az új érték ne legyen negatív
+    const validNewValue = newValue < 0 ? 0 : newValue;
+
     setProductQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [productId]: newValue,
+      [productId]: validNewValue,
     }));
   };
 
-  const sendCartToBackend = async (cartItems) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("Nincs token a localStorage-ban.");
-        return;
-      }
-
-      const itemsToSend = cartItems.map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-      }));
-
-      const response = await fetch("/api/cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(itemsToSend),
-      });
-
-      if (!response.ok) {
-        throw new Error("Hiba történt a kosár elküldése során.");
-      }
-
-      console.log("A kosár sikeresen elküldve a backendnek.");
-    } catch (error) {
-      console.error("Hiba történt a kosár elküldése során:", error);
-    }
-  };
+  const totalQuantity = cartitems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   const handleAddToCart = (product) => {
     const existingCartItem = cartitems.find(
@@ -162,7 +139,7 @@ export default function Products() {
     }
 
     setCartItems(updatedCartItems);
-    console.log(updatedCartItems);
+    console.log();
 
     console.log("Termék hozzáadása a kosárhoz:", product);
     // Elküldjük a kosár tartalmát a backendnek
@@ -226,7 +203,6 @@ export default function Products() {
               padding: "1em",
             }}
           >
-            {" "}
             <Button
               color="primary"
               size="large"
@@ -234,13 +210,17 @@ export default function Products() {
               component={RouterLink}
               to="/cart"
               sx={{
-                backgroundColor: "#FF5733", // Itt állítsd be a kívánt háttérszínt
+                backgroundColor: "#FF5733",
                 "&:hover": {
-                  backgroundColor: "#FF8040", // Itt állítsd be a hover állapot háttérszínét
+                  backgroundColor: "#FF8040",
                 },
               }}
             >
-              Cart
+              <ShoppingCartIcon /> {/* Kosár ikon hozzáadása */}
+              <span style={{ marginLeft: "10px" }}>
+                {totalQuantity}{" "}
+                {/* Kosárban lévő összes termék mennyiségének megjelenítése */}
+              </span>
             </Button>
           </Typography>
         </Box>

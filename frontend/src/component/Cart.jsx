@@ -11,7 +11,13 @@ import Calculator from "./Caculator";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cartitems, handleRemoveFromCart, handleEmptyCart } = useCart();
+  const {
+    cartitems,
+    setCartItems,
+    handleRemoveFromCart,
+    handleEmptyCart,
+    sendCartToBackend,
+  } = useCart();
 
   const emptyCartMessage = (
     <Typography
@@ -24,6 +30,19 @@ const Cart = () => {
     </Typography>
   );
 
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      return; // Ne engedjük a mennyiség csökkentését 1 alá
+    }
+    const updatedCartItems = cartitems.map((item) =>
+      item.productId === productId ? { ...item, quantity: newQuantity } : item
+    );
+    setCartItems(updatedCartItems);
+    sendCartToBackend(updatedCartItems); // Frissítjük a backendet az új kosártartalommal
+  };
+  
+  
+
   const cartContent =
     cartitems.length === 0
       ? emptyCartMessage
@@ -32,20 +51,20 @@ const Cart = () => {
             key={`cartItem_${item.id}_${index}`}
             sx={{
               marginBottom: "16px",
-              borderRadius: "10px", // Kerekített sarkok
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.8)", // Árnyékolás
-              maxWidth: "400px", // Max szélesség
-              margin: "0 16px 16px 0", // Térköz a kártyák között
+              borderRadius: "10px",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.8)",
+              maxWidth: "400px",
+              margin: "0 16px 16px 0",
             }}
           >
             <CardMedia
               component="div"
               sx={{
                 display: "flex",
-                justifyContent: "center", // Középre vízszintesen
-                alignItems: "center", // Középre függőlegesen
-                height: "200px", // Állítsd be a kívánt magasságot
-                backgroundColor: "#f9fbe7", // Háttérszín
+                justifyContent: "center",
+                alignItems: "center",
+                height: "200px",
+                backgroundColor: "#f9fbe7",
               }}
             >
               <img
@@ -54,55 +73,65 @@ const Cart = () => {
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardMedia>
-
-            <Box
+            <CardContent
               sx={{
-                backgroundColor: "#f9fbe7", // Háttérszín
                 display: "flex",
                 flexDirection: "column",
-                flex: "1",
+                justifyContent: "space-between",
               }}
             >
-              <CardContent sx={{ flex: "1 0 auto" }}>
-                <Typography variant="h6" component="div">
-                  {item.name}
-                </Typography>
+              <Box>
+                <Typography variant="h6">{item.name}</Typography>
                 <Typography variant="body2" color="text.secondary">
                   Description: {item.description}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Price: {item.price}
                 </Typography>
-                {/* Mennyiség megjelenítése */}
-                <Typography variant="body2" color="text.secondary">
-                  Quantity: {item.quantity}
-                </Typography>
-              </CardContent>
-              <div
+              </Box>
+              <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "flex-end",
-                  padding: "8px",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingTop: "8px",
                 }}
               >
+                <Box>
+                  <Button
+                    onClick={() =>
+                      handleQuantityChange(item.productId, item.quantity - 1)
+                    }
+                    sx={{ minWidth: "30px" }}
+                  >
+                    ↓
+                  </Button>
+                  <Typography sx={{ display: "inline-block", mx: 1 }}>
+                    {item.quantity}
+                  </Typography>
+                  <Button
+                    onClick={() =>
+                      handleQuantityChange(item.productId, item.quantity + 1)
+                    }
+                    sx={{ minWidth: "30px" }}
+                  >
+                    ↑
+                  </Button>
+                </Box>
                 <Button
+                  onClick={() => handleRemoveFromCart(index)}
                   variant="outlined"
                   color="secondary"
-                  onClick={() => {
-                    handleRemoveFromCart(index);
-                  }}
                   sx={{
-                    backgroundColor: "#FF5733", // Gomb háttérszín
-                    color: "#FFFFFF", // Gomb szövegszín
-                    "&:hover": {
-                      backgroundColor: "#FF8040", // Gomb háttérszín egér fölé helyezéskor
-                    },
+                    backgroundColor: "#FF5733",
+                    color: "#FFFFFF",
+                    "&:hover": { backgroundColor: "#FF8040" },
                   }}
                 >
                   Remove
                 </Button>
-              </div>
-            </Box>
+              </Box>
+            </CardContent>
           </Card>
         ));
 

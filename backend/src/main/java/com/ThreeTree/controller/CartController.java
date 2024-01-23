@@ -50,10 +50,10 @@ public class CartController {
         cartService.addCartItems(request, person);
     }
 
-//
-//    @DeleteMapping("/{cartItemIndex}")
+
+//    @DeleteMapping("/{cartItemId}")
 //    public ResponseEntity<String> removeFromCart(@PathVariable Integer cartItemIndex, @AuthenticationPrincipal Person person) {
-//        cartService.removeFromCart(cartItemIndex, person);
+//        cartService.removeFromCart(cartItemId, person);
 //        return ResponseEntity.ok("Item successfully removed from cart");
 //    }
 

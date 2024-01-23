@@ -19,7 +19,6 @@ export function CartProvider({ children }) {
     sendRemoveRequestToBackend(index);
   };
 
-
   const sendRemoveRequestToBackend = async (cartItemIndex) => {
     try {
       const token = localStorage.getItem("token");
@@ -27,18 +26,18 @@ export function CartProvider({ children }) {
         console.error("Nincs token a localStorage-ban.");
         return;
       }
-  
+
       const response = await fetch(`/api/cart/${cartItemIndex}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("Hiba történt a törlés során.");
       }
-  
+
       console.log("A termék sikeresen eltávolítva a kosárból.");
     } catch (error) {
       console.error("Hiba történt a törlés során:", error);
@@ -80,9 +79,47 @@ export function CartProvider({ children }) {
     }
   };
 
+  const sendCartToBackend = async (cartItems) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Nincs token a localStorage-ban.");
+        return;
+      }
+
+      const itemsToSend = cartItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      }));
+
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(itemsToSend),
+      });
+
+      if (!response.ok) {
+        throw new Error("Hiba történt a kosár elküldése során.");
+      }
+
+      console.log("A kosár sikeresen elküldve a backendnek.");
+    } catch (error) {
+      console.error("Hiba történt a kosár elküldése során:", error);
+    }
+  };
+
   return (
     <CartContext.Provider
-      value={{ cartitems, setCartItems, handleRemoveFromCart, handleEmptyCart }}
+      value={{
+        cartitems,
+        setCartItems,
+        handleRemoveFromCart,
+        handleEmptyCart,
+        sendCartToBackend,
+      }}
     >
       {children}
     </CartContext.Provider>
@@ -90,14 +127,20 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  const { cartitems, setCartItems, handleRemoveFromCart, handleEmptyCart } =
-    useContext(CartContext);
+  const {
+    cartitems,
+    setCartItems,
+    handleRemoveFromCart,
+    handleEmptyCart,
+    sendCartToBackend,
+  } = useContext(CartContext);
 
   return {
     cartitems,
     setCartItems,
     handleRemoveFromCart,
     handleEmptyCart,
+    sendCartToBackend,
   };
 }
 
