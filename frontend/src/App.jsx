@@ -7,6 +7,8 @@ import SignUp from "./component/SignUp";
 import SignIn from "./component/SignIn";
 import Cart from "./component/Cart";
 import Products from "./component/Products";
+import Checkout from "./component/CheckOut";
+import ThankYou from "./component/ThankYou";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/products" element={<Products />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/thank-you" element={<ThankYou />} />
           </Routes>
         </CartProvider>
       </div>

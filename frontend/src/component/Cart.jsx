@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import CardMedia from "@mui/material/CardMedia";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Calculator from "./Caculator";
+import Calculator from "./Calculator";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -39,6 +39,10 @@ const Cart = () => {
     );
     setCartItems(updatedCartItems);
     sendCartToBackend(updatedCartItems); // Frissítjük a backendet az új kosártartalommal
+  };
+
+  const handlePlaceOrder = () => {
+    navigate("/checkout")
   };
 
   const cartContent =
@@ -117,7 +121,7 @@ const Cart = () => {
                   </Button>
                 </Box>
                 <Button
-                  onClick={() => handleRemoveFromCart(item.productId)} 
+                  onClick={() => handleRemoveFromCart(item.productId)}
                   variant="outlined"
                   color="secondary"
                   sx={{
@@ -202,8 +206,19 @@ const Cart = () => {
         Your Cart
       </Typography>
       {cartContent}
+
+      {cartitems.length > 0 && (
+        <Box sx={{ width: "100%", textAlign: "center", marginTop: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handlePlaceOrder}
+          >
+            Place Order
+          </Button>
+        </Box>
+      )}
     </div>
   );
 };
-
 export default Cart;

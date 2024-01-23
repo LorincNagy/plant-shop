@@ -37,7 +37,7 @@ public class Person implements UserDetails {
     @OneToOne
     private Cart cart;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private List<Order> orders;
 
     @Override
