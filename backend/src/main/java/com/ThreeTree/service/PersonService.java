@@ -1,7 +1,9 @@
 package com.ThreeTree.service;
 
 import com.ThreeTree.dao.PersonRepository;
+import com.ThreeTree.dto.NewOrderRequest;
 import com.ThreeTree.dto.NewPersonRequest;
+import com.ThreeTree.model.Order;
 import com.ThreeTree.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.List;
 @Service
 public class PersonService {
     private PersonRepository personRepository;
+
     @Autowired
     public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
@@ -46,5 +49,17 @@ public class PersonService {
 
     public void deleteCustomerById(Long id) {
         personRepository.deleteById(id);
+    }
+
+    public void updatePerson(Order order, Person person, NewOrderRequest request) {
+
+        person.addOrder(order);
+
+        person.setAddress(request.address());
+
+        person.setPhoneNumber(request.phone());
+
+        personRepository.save(person);
+
     }
 }

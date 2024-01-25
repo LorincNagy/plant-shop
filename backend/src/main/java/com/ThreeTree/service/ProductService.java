@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -40,17 +41,14 @@ public class ProductService {
     }
 
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow();
-    }
-
-
     public void saveProduct(Product product) {
         productRepository.save(product);
     }
 
 
-    public Product findProductById(Long id) {
-        return productRepository.findById(id).orElseThrow();
+    public Optional<Product> findProductById(Long id) {
+        return productRepository.findById(id);
     }
+
+
 }

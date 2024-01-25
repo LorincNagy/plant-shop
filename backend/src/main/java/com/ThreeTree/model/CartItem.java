@@ -32,6 +32,10 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    public boolean hasProduct(Long productId) {
+        return this.product != null && this.product.getProductId().equals(productId);
+    }
+
 //    public void addProduct(Product existingProduct) {
 //        products.add(existingProduct);
 //    }

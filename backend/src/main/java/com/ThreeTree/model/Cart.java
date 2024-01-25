@@ -1,5 +1,6 @@
 package com.ThreeTree.model;
 
+import com.ThreeTree.service.CartItemService;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,11 +27,38 @@ public class Cart {
     private Person person;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<CartItem> cartItems= new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
     @OneToOne(mappedBy = "cart")
     private Order order;
 
+
+    public CartItem findCartItemByProduct(Product product) {
+        return this.cartItems.stream()
+                .filter(cartItem -> cartItem.hasProduct(product.getProductId()))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+    public void addCartItem(CartItem cartItem) {
+        cartItems.add(cartItem);
+    }
+
+
+    public void removeCartItem(CartItem cartItem) {
+        cartItems.removeIf(item -> item.getId().equals(cartItem.getId()));
+    }
+
+
+    public void deleteCartItems() {
+
+        this.cartItems.clear();
+    }
+
+    //A @OneToOne(mappedBy = "cart") annotáció azt jelenti, hogy a "cart" nevű mező az "Order" entitásban az, ami az adatbázisban fogja reprezentálni a kapcsolatot. Tehát a Cart entitásban nem fog létrejönni egy "order_id" mező, hanem az "Order" entitásban lesz egy "cart_id" mező, amely a kapcsolatot fogja reprezentálni.
+    //
+    //Az "Order" entitásban található "cart" nevű mező az, amely kapcsolódik a Cart entitáshoz, és az adatbázisban ez a mező fogja tartalmazni a kapcsolatot a "cart_id" segítségével. Ez a módszer segít a kapcsolat egyértelmű azonosításában és a táblák közötti kapcsolat kialakításában.
 //    public void addCartItem(CartItem cartItem) {
 //        cartItems.add(cartItem);
 //    }

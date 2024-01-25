@@ -21,9 +21,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CartService {
 
+    private final ProductService productService;
+    private final CartItemService cartItemService;
     private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
-    private final CartItemRepository cartItemRepository;
 
 
     @Transactional
@@ -34,11 +34,11 @@ public class CartService {
             Product existingProduct = getExistingProduct(request.productId());
 
             // Ellenőrizzük, hogy van-e már CartItem ezzel a termékkel a kosárban
-            CartItem existingCartItem = findCartItemByProduct(cart, existingProduct);
+            CartItem existingCartItem = cart.findCartItemByProduct(existingProduct);
             if (existingCartItem != null) {
                 // Ha már létezik, csak növeld meg a mennyiséget
                 existingCartItem.setQuantity(request.quantity());
-                cartItemRepository.save(existingCartItem); // Frissítsd a meglévő CartItem-et
+                cartItemService.addCartItem(existingCartItem); // Frissítsd a meglévő CartItem-et, //ide kellene cartItemService  ami majd meghivja a saját cartItemRepositoryt, azaz mindig a saját servicében legyen meghivva a saját repositorija
             } else {
                 // Ha nincs ilyen CartItem, hozz létre egy újat
                 CartItem newCartItem = new CartItem();
@@ -46,8 +46,8 @@ public class CartService {
                 newCartItem.setCart(cart);
                 newCartItem.setProduct(existingProduct);
 
-                cartItemRepository.save(newCartItem); // Mentsd el az új CartItem-et
-                cart.getCartItems().add(newCartItem);
+                cartItemService.addCartItem(newCartItem); // Mentsd el az új CartItem-et
+                cart.addCartItem(newCartItem);
             }
         }
         cartRepository.save(cart); // Mentsd el a frissített Cart-ot
@@ -61,61 +61,79 @@ public class CartService {
 
         removeCartItemFromCart(cart, cartItemToRemove);
 
-        cartItemToRemove.setCart(null);
-        cartItemToRemove.setProduct(null);
-        cartItemRepository.delete(cartItemToRemove);
+
+        cartItemService.delete(cartItemToRemove);
 
         cartRepository.save(cart);
     }
 
 
     private CartItem findCartItemById(Long cartItemId) {
-        return cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND,
-                        "Nem található ilyen azonosítójú CartItem: " + cartItemId));
+        Optional<CartItem> optionalCartItem = cartItemService.findById(cartItemId);
+        return optionalCartItem.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND,
+                "Nem található ilyen azonosítójú CartItem: " + cartItemId));
     }
 
     private void removeCartItemFromCart(Cart cart, CartItem cartItemToRemove) {
-        CartItem itemToRemove = cart.getCartItems().stream()
-                .filter(item -> item.getId().equals(cartItemToRemove.getId())) // Az equals metódus használata
-                .findFirst()
-                .orElse(null);
-        if (itemToRemove != null) {
-            cart.getCartItems().remove(itemToRemove);
-        }
+        cart.removeCartItem(cartItemToRemove);
     }
 
 
     private Product getExistingProduct(Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
+        Optional<Product> optionalProduct = productService.findProductById(productId);
         return optionalProduct.orElseThrow(() ->
                 new HttpClientErrorException(HttpStatus.NOT_FOUND, "Nem található termék azonosítóval: " + productId));
     }
 
-    private CartItem findCartItemByProduct(Cart cart, Product product) {
-        // Check if a cart item with the same product already exists in the cart
-        return cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProduct().getProductId().equals(product.getProductId()))
-                .findFirst()
-                .orElse(null);
-    }
 
     @Transactional
     public void emptyCart(Person person) {
         Cart cart = person.getCart();
 
-        // Keresd meg és távolítsd el az összes CartItem-et
-        cart.getCartItems().stream().forEach(cartItem -> {
-            cartItem.setCart(null); // Kapcsolat megszüntetése a Cart és CartItem között
-            cartItem.setProduct(null); // Kapcsolat megszüntetése a Product és CartItem között
-            cartItemRepository.delete(cartItem); // CartItem törlése az adatbázisból
-        });
+        // CartItem törlése az adatbázisból
+        cart.getCartItems().stream().forEach(cartItemService::delete);//nem tul oop kompatibilis?
 
-        // Töröljük a CartItem-eket a Cart objektumból
-        cart.getCartItems().clear();
+        cart.deleteCartItems();
 
         // Mentsük el a frissített Cart objektumot
         cartRepository.save(cart);
     }
 
 }
+
+
+//Repository Rétegben: Az Optional<Product> használata a findById metódusban megfelelő, mivel ez lehetővé teszi, hogy kezeljük azokat az eseteket, amikor a termék nem található az adatbázisban.
+//
+//java
+//Copy code
+//public interface ProductRepository extends JpaRepository<Product, Long> {
+//    Optional<Product> findById(Long id);
+//}
+//Service Rétegben: A ProductService findProductById metódusa szintén visszaad egy Optional<Product> objektumot, amit közvetlenül a repository-tól kap.
+//
+//java
+//Copy code
+//public Optional<Product> findProductById(Long id) {
+//    return productRepository.findById(id);
+//}
+//Egy Másik Szervízben (pl. CartService): Itt kezeled a Optional<Product> objektumot, és kivételt dobsz, ha a termék nem található.
+//
+//java
+//Copy code
+//private Product getExistingProduct(Long productId) {
+//    Optional<Product> optionalProduct = productService.findProductById(productId);
+//    return optionalProduct.orElseThrow(() ->
+//            new HttpClientErrorException(HttpStatus.NOT_FOUND, "Nem található termék azonosítóval: " + productId));
+//}
+//Controllerben: A kivételkezelő (ExceptionHandler) kezeli az HttpClientErrorException kivételeket, és választ küld vissza a kliensnek.
+//
+//java
+//Copy code
+//@ExceptionHandler(HttpClientErrorException.class)
+//public ResponseEntity<String> missingCartItem(HttpClientErrorException ex) {
+//    return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
+//}
+//Ez a megközelítés jól működik a Spring REST API-kban. Az Optional típus használatával rugalmasan kezelheted azokat az eseteket, amikor a termék lehet, hogy nem létezik az adatbázisban. A CartService-ben történő kivétel dobása lehetővé teszi, hogy a hívó réteg (a controller) eldöntse, hogyan kezelje ezt a helyzetet, így a hibakezelés logikája is jól szeparált és kezelhető.
+
+//Ha az Optional objektum nem üres, azaz tartalmaz egy Product példányt (optionalProduct.isPresent() igaz), akkor a orElseThrow() metódus visszaadja ezt a Product példányt.
+//Ha az Optional objektum üres (optionalProduct.isPresent() hamis), akkor a orElseThrow() metódus a megadott kivételt dobja.
