@@ -42,11 +42,11 @@ const Cart = () => {
   };
 
   const handlePlaceOrder = () => {
-    navigate("/checkout")
+    navigate("/checkout");
   };
 
   const cartContent =
-    cartitems.length === 0
+    cartitems && cartitems.length === 0
       ? emptyCartMessage
       : cartitems.map((item, index) => (
           <Card

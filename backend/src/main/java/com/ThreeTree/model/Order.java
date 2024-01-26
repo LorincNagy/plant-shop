@@ -26,7 +26,7 @@ public class Order {
     @ManyToOne
     private Person person;
 
-    @OneToOne
+    @ManyToOne
     private Cart cart;
 }
 

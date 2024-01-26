@@ -13,7 +13,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Calculator from "./Calculator";
 
 function Checkout() {
-  const { cartitems } = useCart();
+  const { cartitems,setCartItems } = useCart();
   const [customerInfo, setCustomerInfo] = useState({
     address: "",
     email: "",
@@ -21,6 +21,7 @@ function Checkout() {
   });
 
   const [totalAmount, setTotalAmount] = useState(0);
+
 
   const navigate = useNavigate();
 
@@ -57,9 +58,11 @@ function Checkout() {
             orderTotal: totalAmount,
           }),
         });
-        console.log(customerInfo);
-        console.log(totalAmount);
         if (response.ok) {
+          // A kosár tartalmának törlése a localStorage-ból
+          setCartItems([]);
+          // localStorage.removeItem("cartItems");
+          
           // A rendelés sikeresen elküldve
           navigate("/thank-you");
         } else {

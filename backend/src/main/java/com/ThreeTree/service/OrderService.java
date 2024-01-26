@@ -1,5 +1,6 @@
 package com.ThreeTree.service;
 
+import com.ThreeTree.dao.CartRepository;
 import com.ThreeTree.dao.OrderRepository;
 import com.ThreeTree.dao.PersonRepository;
 import com.ThreeTree.dto.NewOrderRequest;
@@ -27,7 +28,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductService productService;
     private final PersonService personService;
-    private final PersonRepository personRepository;
+    private final CartService cartService;
 
 
     public void deleteOrder(Long id) {
@@ -53,10 +54,11 @@ public class OrderService {
         order.setOrderTotal(request.orderTotal());
         order.setPerson(person);
         order.setCart(cart);
-
+        cart.addOrder(order);
 
         personService.updatePerson(order, person, request);
         orderRepository.save(order);
+        cartService.save(cart);
 
     }
 }

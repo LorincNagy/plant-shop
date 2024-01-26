@@ -99,6 +99,9 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public void save(Cart cart) {
+        cartRepository.save(cart);
+    }
 }
 
 

@@ -3,10 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartitems, setCartItems] = useState(() => {
-    const storedCartItems = localStorage.getItem("cartItems");
-    return storedCartItems ? JSON.parse(storedCartItems) : [];
-  });
+  const [cartitems, setCartItems] = useState([]);
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartitems));
@@ -14,13 +11,13 @@ export function CartProvider({ children }) {
 
   const handleRemoveFromCart = (productId) => {
     // Megkeressük az adott productId-jű termék indexét a cartitems-ben
-    const removeItem = cartitems.find(item => item.productId === productId);
-    if (removeItem === -1) return; 
-  
+    const removeItem = cartitems.find((item) => item.productId === productId);
+    if (removeItem === -1) return;
+
     const updatedCartItems = [...cartitems];
     updatedCartItems.splice(removeItem, 1);
     setCartItems(updatedCartItems);
-    sendRemoveRequestToBackend(productId); 
+    sendRemoveRequestToBackend(productId);
   };
 
   const sendRemoveRequestToBackend = async (productId) => {

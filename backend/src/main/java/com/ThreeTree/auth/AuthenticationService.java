@@ -91,7 +91,11 @@ public class AuthenticationService {
 
     }
 }
-
+//Jelszó Összehasonlítás: Az AuthenticationManager a konfigurált jelszókódolót használja, hogy azonosítsa, hogy a felhasználó által megadott jelszó, miután azt kódolja, megegyezik-e a már adatbázisban tárolt kódolt jelszóval. Fontos megjegyezni, hogy a kódolt jelszót nem lehet visszafejteni az eredeti formájára; ehelyett a bejelentkezéskor megadott jelszót kódolják, és ezt hasonlítják össze a már kódolt jelszóval.
+//
+//Hitelesítés Eredménye: Ha a kódolt jelszavak megegyeznek, a felhasználó sikeresen hitelesítve van. Ellenkező esetben a hitelesítési folyamat sikertelen lesz.
+//
+//Összefoglalva, a Spring Security nem "visszafejti" a kódolt jelszavakat. Ehelyett a bejelentkezéskor megadott jelszót kódolja, és ezt hasonlítja össze az adatbázisban már tárolt kódolt jelszóval. Ez egy biztonságos módszer a jelszavak kezelésére, mivel a szöveges formában lévő jelszavakat soha nem tároljuk vagy továbbítjuk.
 //A felhasználó megadja az e-mail címét és jelszavát a bejelentkezési űrlapon.
 //
 //Az authenticationManager.authenticate(...) hívás során az alkalmazás ellenőrzi a megadott e-mail címet és jelszót a regisztrált felhasználók között. Ha a bejelentkezési adatok megfelelnek, akkor a felhasználó sikeresen autentikálódik.

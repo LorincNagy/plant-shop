@@ -106,28 +106,25 @@ export default function Products() {
       [productId]: validNewValue,
     }));
   };
-
-  const totalQuantity = cartitems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  const totalQuantity = cartitems
+    ? cartitems.reduce((total, item) => total + item.quantity, 0)
+    : 0;
 
   const handleAddToCart = (product) => {
-    const existingCartItem = cartitems.find(
+    const existingCartItemIndex = cartitems.findIndex(
       (item) => item.productId === product.productId
     );
 
     let updatedCartItems = [];
 
-    if (existingCartItem) {
-      updatedCartItems = cartitems.map((item) =>
-        item.productId === product.productId
-          ? {
-              ...item,
-              quantity: item.quantity + productQuantities[product.productId],
-            }
-          : item
-      );
+    if (existingCartItemIndex !== -1) {
+      updatedCartItems = [...cartitems];
+      updatedCartItems[existingCartItemIndex] = {
+        ...cartitems[existingCartItemIndex],
+        quantity:
+          cartitems[existingCartItemIndex].quantity +
+          productQuantities[product.productId],
+      };
     } else {
       updatedCartItems = [
         ...cartitems,
