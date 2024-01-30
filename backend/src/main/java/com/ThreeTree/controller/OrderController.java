@@ -1,6 +1,7 @@
 package com.ThreeTree.controller;
 
 import com.ThreeTree.dto.NewOrderRequest;
+import com.ThreeTree.dto.NewOrderResponse;
 import com.ThreeTree.model.Order;
 import com.ThreeTree.model.Person;
 import com.ThreeTree.service.OrderService;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("api/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -30,7 +31,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrders() {
+    public List<NewOrderResponse> getAllOrders() {
         return orderService.getOrders();
     }
 
@@ -41,7 +42,6 @@ public class OrderController {
 
     @PostMapping
     public void addOrder(@RequestBody NewOrderRequest newOrderRequest, @AuthenticationPrincipal Person person) {
-        System.out.println(newOrderRequest);
         orderService.saveOrder(newOrderRequest, person);
     }
 

@@ -1,12 +1,16 @@
 package com.ThreeTree.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Entity(name = "Orders")
@@ -23,13 +27,28 @@ public class Order {
     private LocalDateTime orderDate;
     private BigDecimal orderTotal;
 
+
     @ManyToOne
     private Person person;
 
-    @ManyToOne
-    private Cart cart;
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+    }
 }
 
+
+//egy CartItem csak egy rendeléshez (Order) tartozhat, és ez kulcsfontosságú a rendszer logikájában és integritásában. Minden egyes CartItem entitásnak egyedi azonosítója van, és ez az azonosító hivatkozik egy konkrét rendelésre az order_id mezőn keresztül.
+//
+//Ez azt jelenti, hogy:
+//
+//Ha egy CartItem egy rendeléshez van rendelve, akkor nem lehet ugyanez a CartItem (azonos ID-jű) része egy másik rendelésnek.
+//Ugyanaz a termék (Product) szerepelhet több különböző CartItem-ban, de mindegyiknek külön CartItem entitása és egyedi azonosítója lesz.
+//Ha például két különböző rendelésben ugyanaz a termék szerepel, akkor azok két különböző CartItem entitásként jelennek meg, mindegyikük saját egyedi azonosítóval.
+//Ez a megközelítés biztosítja, hogy a rendelések pontosan nyomon követhetők legyenek, és minden egyes CartItem egyértelműen egy adott rendeléshez kapcsolódik, elkerülve ezzel az adatok összekeveredését és az integritási problémákat.
 //A mappedBy attribútum használata kétirányú kapcsolatot jelent a JPA (Java Persistence API) kontextusában. Amikor egy kapcsolatot kétirányúvá teszel, az azt jelenti, hogy mindkét entitás tud a másikról, és kölcsönösen hivatkoznak egymásra.
 //
 //A mappedBy attribútumot azon az oldalon használod, amelyik a kapcsolat "nem tulajdonos" oldala. Ez az oldal nem felelős a kapcsolat adatbázisban való tárolásáért, hanem csak a kapcsolat logikai reprezentációjáért. A "tulajdonos" oldal, amelyik nem használja a mappedBy attribútumot, tartalmazza a kapcsolatot reprezentáló külső kulcsot (foreign key).

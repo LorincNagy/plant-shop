@@ -29,9 +29,6 @@ public class Cart {
     @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Order> orders = new ArrayList<>();
-
 
     public CartItem findCartItemByProduct(Product product) {
         return this.cartItems.stream()
@@ -56,9 +53,7 @@ public class Cart {
         this.cartItems.clear();
     }
 
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
+
 
 
     //A CascadeType.ALL azt jelenti, hogy minden JPA cascade művelet (mint például mentés, frissítés, törlés) a "szülő" entitáson (ebben az esetben a Cart entitáson) automatikusan alkalmazva lesz a "gyermek" entitásokra (itt a CartItem és Order entitásokra) is.

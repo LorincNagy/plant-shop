@@ -4,10 +4,8 @@ import com.ThreeTree.dao.CartRepository;
 import com.ThreeTree.dao.OrderRepository;
 import com.ThreeTree.dao.PersonRepository;
 import com.ThreeTree.dto.NewOrderRequest;
-import com.ThreeTree.model.Cart;
-import com.ThreeTree.model.Order;
-import com.ThreeTree.model.Person;
-import com.ThreeTree.model.Product;
+import com.ThreeTree.dto.NewOrderResponse;
+import com.ThreeTree.model.*;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,6 +28,8 @@ public class OrderService {
     private final ProductService productService;
     private final PersonService personService;
     private final CartService cartService;
+    private final CartItemService cartItemService;
+    private final OrderItemService orderItemService;
 
 
     public void deleteOrder(Long id) {
@@ -41,26 +42,48 @@ public class OrderService {
         return orderRepository.findById(id).orElseThrow();
     }
 
-    public List<Order> getOrders() {
-        return orderRepository.findAll();
+    @Transactional
+    public List<NewOrderResponse> getOrders() {
+        List<Order> orders = orderRepository.findAll();
+
+        return orders.stream()
+                .map(NewOrderResponse::new)
+                .collect(Collectors.toList());
     }
+
 
     @Transactional
     public void saveOrder(NewOrderRequest request, Person person) {
         Cart cart = person.getCart();
+        List<CartItem> originalCartItems = cart.getCartItems();
+//        System.out.println(originalCartItems);
 
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
         order.setOrderTotal(request.orderTotal());
         order.setPerson(person);
-        order.setCart(cart);
-        cart.addOrder(order);
 
-        personService.updatePerson(order, person, request);
+        for (CartItem cartItem : originalCartItems) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItemService.saveOrderItem(orderItem);
+            order.addOrderItem(orderItem);
+            cartItemService.delete(cartItem);
+        }
+
+        cart.deleteCartItems();
+        // Mentés az Order entitásnak
         orderRepository.save(order);
-        cartService.save(cart);
 
+
+        cartService.save(cart); // Mentsd el a kiürített Cart-ot
+
+
+        personService.updatePerson(order, person, request); // Frissítsd a Person-t az új rendeléssel
+//        System.out.println(order.getOrderItems());
     }
+
 }
 
 

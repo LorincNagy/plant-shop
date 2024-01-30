@@ -18,7 +18,7 @@ public class NewProductResponse {
         this.price = price;
         this.stock = stock;
         this.image = image;
-        this.productId = productId; // Termék azonosító hozzáadása
+        this.productId = productId;
     }
 
     public Long getProductId() {
