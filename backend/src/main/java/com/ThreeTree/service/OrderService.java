@@ -6,11 +6,12 @@ import com.ThreeTree.dao.PersonRepository;
 import com.ThreeTree.dto.NewOrderRequest;
 import com.ThreeTree.dto.NewOrderResponse;
 import com.ThreeTree.model.*;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -51,21 +52,36 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+//    @Transactional
+//    public List<NewOrderResponse> getOrders() {
+//        List<Order> orders = orderRepository.findAll();
+//
+//
+//        List<NewOrderResponse> response = orders.stream().map(NewOrderResponse::new).collect(Collectors.toList());
+//
+//        // A végleges NewOrderResponse lista kiírása
+//        System.out.println("NewOrderResponses: " + response);
+//
+//        return response;
+//    }
 
     @Transactional
     public void saveOrder(NewOrderRequest request, Person person) {
         Cart cart = person.getCart();
         List<CartItem> originalCartItems = cart.getCartItems();
-//        System.out.println(originalCartItems);
 
         Order order = new Order();
-        order.setOrderDate(LocalDateTime.now());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm");
+        String formattedDate = LocalDateTime.now().format(formatter);
+        LocalDateTime dateTime = LocalDateTime.parse(formattedDate, formatter);
+        order.setOrderDate(dateTime);
         order.setOrderTotal(request.orderTotal());
         order.setPerson(person);
 
         for (CartItem cartItem : originalCartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
+            orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItemService.saveOrderItem(orderItem);
             order.addOrderItem(orderItem);

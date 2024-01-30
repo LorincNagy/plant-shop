@@ -16,6 +16,7 @@ import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import PaginationControlled from "./PaginationControlled.jsx";
 import { useCart } from "./CartProvider";
+import { useNavigate } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -96,6 +97,11 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const { cartitems, setCartItems, sendCartToBackend } = useCart();
   const [productQuantities, setProductQuantities] = useState({});
+  const navigate = useNavigate();
+
+  const handleNavigateToOrders = () => {
+    navigate("/orders");
+  };
 
   const handleQuantityChange = (productId, newValue) => {
     // Ellenőrizzük, hogy az új érték ne legyen negatív
@@ -211,13 +217,25 @@ export default function Products() {
                 "&:hover": {
                   backgroundColor: "#FF8040",
                 },
+                marginRight: "10px",
               }}
             >
-              <ShoppingCartIcon /> {/* Kosár ikon hozzáadása */}
-              <span style={{ marginLeft: "10px" }}>
-                {totalQuantity}{" "}
-                {/* Kosárban lévő összes termék mennyiségének megjelenítése */}
-              </span>
+              <ShoppingCartIcon />
+              <span style={{ marginLeft: "10px" }}>{totalQuantity}</span>
+            </Button>
+            <Button
+              color="primary"
+              size="large"
+              variant="contained"
+              onClick={handleNavigateToOrders}
+              sx={{
+                backgroundColor: "#FF5733",
+                "&:hover": {
+                  backgroundColor: "#FF8040",
+                },
+              }}
+            >
+              My orders
             </Button>
           </Typography>
         </Box>

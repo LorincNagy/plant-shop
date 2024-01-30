@@ -1,5 +1,6 @@
 package com.ThreeTree.model;
 
+import com.ThreeTree.dto.NewProductResponse;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -22,11 +23,12 @@ public class OrderItem {
 
     private Integer quantity;
 
+    @ManyToOne
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
-
 
 
 

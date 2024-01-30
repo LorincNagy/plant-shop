@@ -2,8 +2,10 @@ package com.ThreeTree.dto;
 
 
 import com.ThreeTree.model.Order;
+import com.ThreeTree.model.Person;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,19 +14,20 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@ToString
 public class NewOrderResponse {
 
     private Long id;
     private LocalDateTime orderDate;
     private BigDecimal orderTotal;
-    private Long personId;
+    private NewPersonResponse person;
     private List<NewOrderItemResponse> orderItemResponses;
 
     public NewOrderResponse(Order order) {
         this.id = order.getId();
         this.orderDate = order.getOrderDate();
         this.orderTotal = order.getOrderTotal();
-        this.personId = order.getPerson() != null ? order.getPerson().getId() : null;
+        this.person = order.getPerson() != null ? new NewPersonResponse(order.getPerson()) : null;
         this.orderItemResponses = order.getOrderItems().stream()
                 .map(NewOrderItemResponse::new)
                 .collect(Collectors.toList());

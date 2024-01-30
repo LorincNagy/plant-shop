@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Entity
@@ -27,6 +28,8 @@ public class Product {
     private String image;
 
 
+    @OneToMany(mappedBy = "product")
+    private List<OrderItem> orderItems;
 }
 
 //Hivatkozás a CartItem-ra a Product oldaláról hiányzik:
