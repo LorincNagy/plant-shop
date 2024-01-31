@@ -95,7 +95,7 @@ const pageSize = 9;
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const { cartitems, setCartItems, sendCartToBackend } = useCart();
+  const { cartitems, setCartItems, sendCartToBackend,handleSignOut } = useCart();
   const [productQuantities, setProductQuantities] = useState({});
   const navigate = useNavigate();
 

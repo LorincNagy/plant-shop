@@ -28,8 +28,11 @@ public class Product {
     private String image;
 
 
-    @OneToMany(mappedBy = "product")
-    private List<OrderItem> orderItems;
+//    @OneToMany(mappedBy = "product")
+//    private List<OrderItem> orderItems;
+
+//    @OneToMany(mappedBy = "product")
+//    private List<CartItem> cartItemList;
 }
 
 //Hivatkozás a CartItem-ra a Product oldaláról hiányzik:

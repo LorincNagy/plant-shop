@@ -17,6 +17,7 @@ const Cart = () => {
     handleRemoveFromCart,
     handleEmptyCart,
     sendCartToBackend,
+    handleSignOut,
   } = useCart();
 
   const emptyCartMessage = (
@@ -32,13 +33,13 @@ const Cart = () => {
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) {
-      return; // Ne engedjük a mennyiség csökkentését 1 alá
+      return; 
     }
     const updatedCartItems = cartitems.map((item) =>
       item.productId === productId ? { ...item, quantity: newQuantity } : item
     );
     setCartItems(updatedCartItems);
-    sendCartToBackend(updatedCartItems); // Frissítjük a backendet az új kosártartalommal
+    sendCartToBackend(updatedCartItems); 
   };
 
   const handlePlaceOrder = () => {
@@ -140,13 +141,13 @@ const Cart = () => {
   return (
     <div
       style={{
-        display: "flex", // Flex layout engedélyezése
-        flexWrap: "wrap", // Több sorba törés, ha elfogy a hely
-        gap: "16px", // Térköz a kártyák között
-        justifyContent: "center", // Középre igazítás
+        display: "flex", 
+        flexWrap: "wrap",
+        gap: "16px", 
+        justifyContent: "center", 
       }}
     >
-      {/* Új Box konténer a Calculator komponenshez */}
+ 
       <Box
         sx={{
           display: "flex",
@@ -172,7 +173,7 @@ const Cart = () => {
               "&:hover": {
                 backgroundColor: "#FF8040",
               },
-              marginRight: "8px", // Kis tér hozzáadása a gombok között
+              marginRight: "8px", 
             }}
           >
             Close Cart

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "./CartProvider";
 import {
   Table,
   TableBody,
@@ -8,16 +9,39 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button
+  Button,
+  Collapse,
+  Box,
 } from "@mui/material";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const { handleSignOut } = useCart();
+
+  const tableStyle = {
+    minWidth: 650,
+    maxWidth: "60%",
+    margin: "auto",
+  };
+
+  const cellStyle = {
+    fontFamily: "Arial, sans-serif",
+    color: "darkblue",
+    fontWeight: "bold",
+    fontSize: "20px",
+  };
+  const cellStyle2 = {
+    fontFamily: "Arial, sans-serif",
+    color: "#009688",
+    fontWeight: "bold",
+    fontSize: "16px",
+  };
+
   const handleNavigateToProducts = () => {
-    navigate('/products'); // Átirányítás a /products oldalra
+    navigate("/products");
   };
 
   const fetchOrders = async () => {
@@ -38,7 +62,7 @@ function Orders() {
 
       setOrders(data);
     } catch (error) {
-      setError(error.message); // Hiba beállítása
+      setError(error.message);
     }
   };
 
@@ -47,73 +71,186 @@ function Orders() {
   }, []);
 
   if (error) {
-    return <div>Hiba: {error}</div>; // Hiba megjelenítése
+    return <div>Hiba: {error}</div>;
   }
   return (
     <div>
-      <h1>Orders</h1>
-      <Button onClick={handleNavigateToProducts} variant="contained" color="primary">
-        Go to Products
-      </Button>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell align="right">Date</TableCell>
-              <TableCell align="right">Total Amount</TableCell>
-              <TableCell align="right">Customer</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order) => (
-              <React.Fragment key={order.id}>
-                {/* Egy sor az order adataival */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        sx={{ padding: "10px" }}
+      >
+        <h1 style={{ alignSelf: "center", margin: "10px 0" }}>Orders</h1>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          sx={{ width: "100%", maxWidth: "60%", margin: "auto" }}
+        >
+          <Button
+            onClick={handleNavigateToProducts}
+            variant="contained"
+            style={{ backgroundColor: "#FF5733", color: "white" }}
+          >
+            Go to Products
+          </Button>
+          <Button
+            onClick={handleSignOut}
+            variant="contained"
+            style={{ backgroundColor: "#FF5733", color: "white" }}
+          >
+            Sign out
+          </Button>
+        </Box>
+      </Box>
+      {orders.map((order) => (
+        <Box key={order.id} sx={{ marginBottom: "100px" }}>
+          <TableContainer component={Paper} sx={tableStyle}>
+            <Table aria-label="order table">
+              <TableHead>
+                <TableRow style={{ backgroundColor: "#f5f5f5" }}>
+                  <TableCell
+                    style={{ ...cellStyle, width: "25%" }}
+                    align="center"
+                  >
+                    Order ID
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "25%" }}
+                    align="center"
+                  >
+                    Date
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "25%" }}
+                    align="center"
+                  >
+                    Total Amount
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "25%" }}
+                    align="center"
+                  >
+                    Customer
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    style={{ ...cellStyle2, width: "20%" }}
+                    align="center"
+                  >
                     {order.id}
                   </TableCell>
-                  <TableCell align="right">
+
+                  <TableCell
+                    style={{ ...cellStyle2, width: "20%" }}
+                    align="center"
+                  >
                     {order.orderDate.replace("T", ", ")}
                   </TableCell>
-                  <TableCell align="right">{order.orderTotal}</TableCell>
-                  <TableCell align="right">
+                  <TableCell
+                    style={{ ...cellStyle2, width: "20%" }}
+                    align="center"
+                  >
+                    {order.orderTotal}
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle2, width: "20%" }}
+                    align="center"
+                  >
                     {order.person
                       ? `${order.person.firstName} ${order.person.lastName}`
                       : "N/A"}
                   </TableCell>
                 </TableRow>
-
-                {/* További sorok az orderhez tartozó order items adataival */}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer
+            component={Paper}
+            sx={{ ...tableStyle, marginTop: "20px" }}
+          >
+            <Table aria-label="order items table">
+              <TableHead>
+                <TableRow style={{ backgroundColor: "#e8eaf6" }}>
+                  <TableCell
+                    style={{ ...cellStyle, width: "20%" }}
+                    align="center"
+                  >
+                    Product ID
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "20%" }}
+                    align="center"
+                  >
+                    Product Name
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "20%" }}
+                    align="center"
+                  >
+                    Description
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "20%" }}
+                    align="center"
+                  >
+                    Price
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "20%" }}
+                    align="center"
+                  >
+                    Quantity
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {order.orderItemResponses.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell align="right">Item ID: {item.id}</TableCell>
-                    <TableCell align="right">
-                      Product Name:{" "}
+                    <TableCell
+                      style={{ ...cellStyle2, width: "20%" }}
+                      align="center"
+                    >
+                      {item.productResponse.productId}
+                    </TableCell>
+                    <TableCell
+                      style={{ ...cellStyle2, width: "20%" }}
+                      align="center"
+                    >
                       {item.productResponse ? item.productResponse.name : "N/A"}
                     </TableCell>
-                    <TableCell align="right">
-                      Description:{" "}
+                    <TableCell
+                      style={{ ...cellStyle2, width: "20%" }}
+                      align="center"
+                    >
                       {item.productResponse
                         ? item.productResponse.description
                         : "N/A"}
                     </TableCell>
-                    <TableCell align="right">
-                      Price:{" "}
+                    <TableCell
+                      style={{ ...cellStyle2, width: "20%" }}
+                      align="center"
+                    >
                       {item.productResponse
                         ? item.productResponse.price
                         : "N/A"}
                     </TableCell>
-                    <TableCell align="right">
-                      Quantity: {item.quantity}
+                    <TableCell
+                      style={{ ...cellStyle2, width: "20%" }}
+                      align="center"
+                    >
+                      {item.quantity}
                     </TableCell>
                   </TableRow>
                 ))}
-              </React.Fragment>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      ))}
     </div>
   );
 }

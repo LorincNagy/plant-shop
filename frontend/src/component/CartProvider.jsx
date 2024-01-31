@@ -9,6 +9,8 @@ export function CartProvider({ children }) {
     localStorage.setItem("cartItems", JSON.stringify(cartitems));
   }, [cartitems]);
 
+  const handleSignOut = () => {};
+
   const handleRemoveFromCart = (productId) => {
     // Megkeressük az adott productId-jű termék indexét a cartitems-ben
     const removeItem = cartitems.find((item) => item.productId === productId);
@@ -120,6 +122,7 @@ export function CartProvider({ children }) {
         handleRemoveFromCart,
         handleEmptyCart,
         sendCartToBackend,
+        handleSignOut,
       }}
     >
       {children}
@@ -134,6 +137,7 @@ export function useCart() {
     handleRemoveFromCart,
     handleEmptyCart,
     sendCartToBackend,
+    handleSignOut,
   } = useContext(CartContext);
 
   return {
@@ -142,6 +146,7 @@ export function useCart() {
     handleRemoveFromCart,
     handleEmptyCart,
     sendCartToBackend,
+    handleSignOut,
   };
 }
 
