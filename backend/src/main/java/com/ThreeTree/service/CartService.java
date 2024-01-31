@@ -32,22 +32,37 @@ public class CartService {
 
         for (NewCartItemRequest request : requests) {
             Product existingProduct = getExistingProduct(request.productId());
+            int productStock = existingProduct.getStock();
 
-            // Ellenőrizzük, hogy van-e már CartItem ezzel a termékkel a kosárban
+
             CartItem existingCartItem = cart.findCartItemByProduct(existingProduct);
-            if (existingCartItem != null) {
-                // Ha már létezik, csak növeld meg a mennyiséget
-                existingCartItem.setQuantity(request.quantity());
-                cartItemService.addCartItem(existingCartItem); // Frissítsd a meglévő CartItem-et, //ide kellene cartItemService  ami majd meghivja a saját cartItemRepositoryt, azaz mindig a saját servicében legyen meghivva a saját repositorija
-            } else {
-                // Ha nincs ilyen CartItem, hozz létre egy újat
-                CartItem newCartItem = new CartItem();
-                newCartItem.setQuantity(request.quantity());
-                newCartItem.setCart(cart);
-                newCartItem.setProduct(existingProduct);
+            int cartItemQuantityInCart = 0;
 
-                cartItemService.addCartItem(newCartItem); // Mentsd el az új CartItem-et
-                cart.addCartItem(newCartItem);
+            if (existingCartItem != null) {
+                cartItemQuantityInCart = existingCartItem.getQuantity();
+            }
+
+            // Számítsd ki a levonandó mennyiséget
+            int quantityToSubtract = Math.min(productStock, request.quantity() - cartItemQuantityInCart);
+
+            if (quantityToSubtract > 0) {
+                // Ha már létezik, csak növeld meg a mennyiséget
+                if (existingCartItem != null) {
+                    existingCartItem.setQuantity(existingCartItem.getQuantity() + quantityToSubtract);
+                    cartItemService.addCartItem(existingCartItem);
+                } else {
+                    // Ha nincs ilyen CartItem, hozz létre egy újat
+                    CartItem newCartItem = new CartItem();
+                    newCartItem.setQuantity(quantityToSubtract);
+                    newCartItem.setCart(cart);
+                    newCartItem.setProduct(existingProduct);
+                    cartItemService.addCartItem(newCartItem);
+                    cart.addCartItem(newCartItem);
+                }
+
+                // Vonjuk le a Product készletét
+                existingProduct.setStock(productStock - quantityToSubtract);
+//                productService.saveProduct(existingProduct);
             }
         }
         cartRepository.save(cart); // Mentsd el a frissített Cart-ot

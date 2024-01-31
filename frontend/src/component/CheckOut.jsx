@@ -13,7 +13,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Calculator from "./Calculator";
 
 function Checkout() {
-  const { cartitems,setCartItems } = useCart();
+  const { cartitems, setCartItems } = useCart();
   const [customerInfo, setCustomerInfo] = useState({
     address: "",
     email: "",
@@ -21,7 +21,7 @@ function Checkout() {
   });
 
   const [totalAmount, setTotalAmount] = useState(0);
-
+  const { handleSignOut } = useCart();
 
   const navigate = useNavigate();
 
@@ -31,15 +31,13 @@ function Checkout() {
   };
 
   const handlePlaceOrder = async () => {
-    const token = localStorage.getItem("token"); // Token szerezzük be localStorage-ból
+    const token = localStorage.getItem("token");
 
-    // Ellenőrizzük, hogy a token létezik-e
     if (!token) {
       console.error("Nincs token a localStorage-ban.");
       return;
     }
 
-    // A confirm alert megjelenítése
     const confirmOrder = window.confirm(
       "Are you sure you want to place the order?"
     );
@@ -59,14 +57,10 @@ function Checkout() {
           }),
         });
         if (response.ok) {
-          // A kosár tartalmának törlése a localStorage-ból
           setCartItems([]);
-          // localStorage.removeItem("cartItems");
-          
-          // A rendelés sikeresen elküldve
+
           navigate("/thank-you");
         } else {
-          // Valamilyen hiba történt a rendelés során
           console.error("Order placement failed");
         }
       } catch (error) {
@@ -86,10 +80,23 @@ function Checkout() {
     <Container component="main" maxWidth="sm">
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar sx={{ justifyContent: "center" }}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
           <Typography variant="h6" color="inherit" noWrap>
             Plantify Checkout
           </Typography>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#FF5733",
+              "&:hover": {
+                backgroundColor: "#FF8040",
+              },
+              color: "white",
+            }}
+            onClick={handleSignOut}
+          >
+            Sign out
+          </Button>
         </Toolbar>
       </AppBar>
       <Paper

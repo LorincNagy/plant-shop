@@ -235,27 +235,32 @@ export default function SignUp() {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
+              <Box
                 sx={{
-                  width: "auto", // Automatikus szélesség a tartalomhoz igazítva
-                  height: "2.5em", // A gomb magassága
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#000000",
-                  color: "#ffffff",
-                  "&:hover": {
-                    backgroundColor: "#FF5733",
-                  },
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mt: 2,
                 }}
               >
-                Sign Up
-              </Button>
-              <Grid container>
-                <Grid item xs></Grid>
-              </Grid>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    width: "45%", // A gomb szélessége
+                    backgroundColor: "#000000",
+                    color: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FF5733",
+                    },
+                  }}
+                >
+                  Sign Up
+                </Button>
+                <Link component={RouterLink} to="/signin" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Box>
             </Box>
           </Box>
           <Copyright sx={{ mt: 8, mb: 4 }} />

@@ -95,7 +95,8 @@ const pageSize = 9;
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const { cartitems, setCartItems, sendCartToBackend,handleSignOut } = useCart();
+  const { cartitems, setCartItems, sendCartToBackend, handleSignOut } =
+    useCart();
   const [productQuantities, setProductQuantities] = useState({});
   const navigate = useNavigate();
 
@@ -104,7 +105,6 @@ export default function Products() {
   };
 
   const handleQuantityChange = (productId, newValue) => {
-    // Ellenőrizzük, hogy az új érték ne legyen negatív
     const validNewValue = newValue < 0 ? 0 : newValue;
 
     setProductQuantities((prevQuantities) => ({
@@ -142,10 +142,9 @@ export default function Products() {
     }
 
     setCartItems(updatedCartItems);
-    console.log();
 
     console.log("Termék hozzáadása a kosárhoz:", product);
-    // Elküldjük a kosár tartalmát a backendnek
+
     sendCartToBackend(updatedCartItems);
   };
 
@@ -176,6 +175,27 @@ export default function Products() {
             minHeight: "100vh",
           }}
         >
+          <Box
+            sx={{
+              position: "fixed",
+              top: "1em",
+              left: "1em",
+              zIndex: 2,
+            }}
+          >
+            <Button
+              onClick={handleSignOut}
+              variant="contained"
+              sx={{
+                backgroundColor: "#FF5733",
+                "&:hover": {
+                  backgroundColor: "#FF8040",
+                },
+              }}
+            >
+              Sign out
+            </Button>
+          </Box>
           <Typography
             component="h1"
             variant="h2"

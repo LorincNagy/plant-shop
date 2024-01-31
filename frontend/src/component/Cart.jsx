@@ -33,13 +33,13 @@ const Cart = () => {
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) {
-      return; 
+      return;
     }
     const updatedCartItems = cartitems.map((item) =>
       item.productId === productId ? { ...item, quantity: newQuantity } : item
     );
     setCartItems(updatedCartItems);
-    sendCartToBackend(updatedCartItems); 
+    sendCartToBackend(updatedCartItems);
   };
 
   const handlePlaceOrder = () => {
@@ -141,13 +141,12 @@ const Cart = () => {
   return (
     <div
       style={{
-        display: "flex", 
+        display: "flex",
         flexWrap: "wrap",
-        gap: "16px", 
-        justifyContent: "center", 
+        gap: "16px",
+        justifyContent: "center",
       }}
     >
- 
       <Box
         sx={{
           display: "flex",
@@ -160,7 +159,6 @@ const Cart = () => {
         <Calculator cartitems={cartitems} />
 
         <div sx={{ display: "flex", gap: "8px" }}>
-          {/* Close Cart gomb */}
           <Button
             variant="outlined"
             color="secondary"
@@ -173,13 +171,12 @@ const Cart = () => {
               "&:hover": {
                 backgroundColor: "#FF8040",
               },
-              marginRight: "8px", 
+              marginRight: "8px",
             }}
           >
             Close Cart
           </Button>
 
-          {/* Empty Cart gomb */}
           <Button
             variant="outlined"
             color="secondary"

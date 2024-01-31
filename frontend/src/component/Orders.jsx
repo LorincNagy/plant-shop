@@ -19,7 +19,7 @@ function Orders() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const { handleSignOut } = useCart();
+  const {  handleSignOut } = useCart();
 
   const tableStyle = {
     minWidth: 650,

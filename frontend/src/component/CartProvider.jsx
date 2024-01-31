@@ -1,18 +1,23 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartitems, setCartItems] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartitems));
   }, [cartitems]);
 
-  const handleSignOut = () => {};
+  const handleSignOut = () => {
+    setCartItems([]);
+    localStorage.clear();
+    navigate("/signin");
+  };
 
   const handleRemoveFromCart = (productId) => {
-    // Megkeressük az adott productId-jű termék indexét a cartitems-ben
     const removeItem = cartitems.find((item) => item.productId === productId);
     if (removeItem === -1) return;
 
@@ -49,21 +54,18 @@ export function CartProvider({ children }) {
 
   const handleEmptyCart = async () => {
     try {
-      // Olvasd ki a tokent (például JWT-t) a localStorage-ból
       const token = localStorage.getItem("token");
 
-      // Ha nincs token, akkor megfelelően kezeld le (pl. hibakezelés)
       if (!token) {
         console.log("No token found.");
         return;
       }
 
-      // Elkülded a tokent a szervernek a kérés fejlécében
       const response = await fetch("/api/cart/empty-cart", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Hozzáadod a tokent a fejléchez
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -71,12 +73,9 @@ export function CartProvider({ children }) {
         throw new Error("Network response was not ok");
       }
 
-      // Töröld a localStorage-ban tárolt kosár tartalmat
-      localStorage.removeItem("cartItems");
-
       const data = await response.json();
       console.log("Server response:", data);
-      setCartItems([]); // Set an empty cart based on the response
+      setCartItems([]);
     } catch (error) {
       console.error("An error occurred:", error);
     }
