@@ -62,7 +62,7 @@ public class CartService {
 
                 // Vonjuk le a Product készletét
                 existingProduct.setStock(productStock - quantityToSubtract);
-//                productService.saveProduct(existingProduct);
+                productService.saveProduct(existingProduct);
             }
         }
         cartRepository.save(cart); // Mentsd el a frissített Cart-ot

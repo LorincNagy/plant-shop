@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartitems, setCartItems] = useState([]);
+  const [cartitems, setCartItems] = useState(() => {
+    const savedCartItems = localStorage.getItem("cartItems");
+    return savedCartItems ? JSON.parse(savedCartItems) : [];
+  });
   const navigate = useNavigate();
 
   useEffect(() => {

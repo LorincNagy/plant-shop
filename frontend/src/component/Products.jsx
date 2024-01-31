@@ -69,12 +69,13 @@ const fetchProducts = async () => {
       throw new Error("Hiba történt a védett erőforrások lekérése során.");
     }
 
-    const products = await response.json();
+    let products = await response.json();
 
-    // Inicializáljuk a quantity mezőket minden termékhez
+    products = products.sort((a, b) => a.productId - b.productId);
+
     const productsWithQuantity = products.map((product) => ({
       ...product,
-      quantity: 0, // Itt inicializálhatod az alapértelmezett értéket
+      quantity: 0,
     }));
 
     return productsWithQuantity;
@@ -274,7 +275,7 @@ export default function Products() {
             {displayedProducts.map((product, index) => (
               <Grid
                 item
-                key={`product_${product.id}_${index}`} // Concatenate index to product.id for unique key
+                key={`product_${product.productId}_${index}`}
                 xs={12}
                 sm={6}
                 md={4}
