@@ -13,24 +13,21 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Calculator from "./Calculator";
 
 function Checkout() {
-  const { cartitems, setCartItems } = useCart();
+  const { cartitems, setCartItems, handleSignOut } = useCart();
   const [customerInfo, setCustomerInfo] = useState({
     address: "",
     email: "",
     phone: "",
   });
-
   const [totalAmount, setTotalAmount] = useState(0);
-  const { handleSignOut } = useCart();
-
   const navigate = useNavigate();
 
-  // A "Calculator" komponens által számolt összeg beállítása
   const handleCalculatorResult = (result) => {
     setTotalAmount(result);
   };
 
-  const handlePlaceOrder = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Megakadályozza az űrlap alapértelmezett elküldését
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -48,7 +45,7 @@ function Checkout() {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-          }, //Fontos, hogy a JSON kulcsok megegyezzenek a NewOrderRequest record mezőinek neveivel backenden. Például a totalAmount-ot orderTotal-ként kell küldeni, ha a backend ezt várja.
+          },
           body: JSON.stringify({
             address: customerInfo.address,
             email: customerInfo.email,
@@ -58,7 +55,6 @@ function Checkout() {
         });
         if (response.ok) {
           setCartItems([]);
-
           navigate("/thank-you");
         } else {
           console.error("Order placement failed");
@@ -86,6 +82,7 @@ function Checkout() {
           </Typography>
           <Button
             variant="contained"
+            onClick={handleSignOut}
             sx={{
               backgroundColor: "#FF5733",
               "&:hover": {
@@ -93,7 +90,6 @@ function Checkout() {
               },
               color: "white",
             }}
-            onClick={handleSignOut}
           >
             Sign out
           </Button>
@@ -106,6 +102,7 @@ function Checkout() {
         <Typography component="h1" variant="h4" align="center">
           Order Review
         </Typography>
+        {/* Cart items list */}
         {cartitems.map((item, index) => (
           <Box
             key={index}
@@ -117,56 +114,44 @@ function Checkout() {
             <Typography>${item.price * item.quantity}</Typography>
           </Box>
         ))}
-
         <Calculator cartitems={cartitems} onResult={handleCalculatorResult} />
         <Typography variant="h5" sx={{ mt: 4 }}>
           Customer Information
         </Typography>
-        <TextField
-          label="Address"
-          name="address"
-          fullWidth
-          variant="outlined"
-          value={customerInfo.address}
-          onChange={handleChange}
-          required
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          label="Email"
-          name="email"
-          fullWidth
-          variant="outlined"
-          value={customerInfo.email}
-          onChange={handleChange}
-          required
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          label="Phone Number (Optional)"
-          name="phone"
-          fullWidth
-          variant="outlined"
-          value={customerInfo.phone}
-          onChange={handleChange}
-          sx={{ mt: 2 }}
-        />
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-          <Button
-            variant="contained"
-            sx={{ mt: 3, ml: 1 }}
-            onClick={() => navigate("/cart")}
-          >
-            Back to Cart
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ mt: 3, ml: 1 }}
-            onClick={handlePlaceOrder}
-          >
-            Confirm Order
-          </Button>
-        </Box>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Address"
+            name="address"
+            fullWidth
+            variant="outlined"
+            value={customerInfo.address}
+            onChange={handleChange}
+            required
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            label="Phone Number"
+            name="phone"
+            fullWidth
+            variant="outlined"
+            value={customerInfo.phone}
+            onChange={handleChange}
+            required
+            sx={{ mt: 2 }}
+          />
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
+            <Button
+              variant="contained"
+              onClick={() => navigate("/cart")}
+              sx={{ mt: 3, ml: 1 }}
+            >
+              Back to Cart
+            </Button>
+            <Button type="submit" variant="contained" sx={{ mt: 3, ml: 1 }}>
+              Confirm Order
+            </Button>
+          </Box>
+        </form>
       </Paper>
     </Container>
   );

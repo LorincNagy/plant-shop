@@ -17,6 +17,8 @@ import Link from "@mui/material/Link";
 import PaginationControlled from "./PaginationControlled.jsx";
 import { useCart } from "./CartProvider";
 import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 function Copyright() {
   return (
@@ -30,6 +32,26 @@ function Copyright() {
     </Typography>
   );
 }
+
+const getStockStyles = (product) => {
+  const stock = product.stock;
+  if (stock <= 0) {
+    return {
+      quantityColor: "red",
+      message: "Out of stock",
+    };
+  } else if (stock <= 5) {
+    return {
+      quantityColor: "orange",
+      message: `Only ${stock} ${stock === 1 ? "item" : "items"} left`,
+    };
+  } else {
+    return {
+      quantityColor: "inherit",
+      message: "",
+    };
+  }
+};
 
 const customTheme = createTheme({
   palette: {
@@ -99,6 +121,11 @@ export default function Products() {
   const { cartitems, setCartItems, sendCartToBackend, handleSignOut } =
     useCart();
   const [productQuantities, setProductQuantities] = useState({});
+  const [snackbarInfo, setSnackbarInfo] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const navigate = useNavigate();
 
   const handleNavigateToOrders = () => {
@@ -118,35 +145,84 @@ export default function Products() {
     : 0;
 
   const handleAddToCart = (product) => {
-    const existingCartItemIndex = cartitems.findIndex(
-      (item) => item.productId === product.productId
-    );
+    const quantityInCart = cartitems.reduce((total, item) => {
+      if (item.productId === product.productId) {
+        return total + item.quantity;
+      }
+      return total;
+    }, 0);
 
-    let updatedCartItems = [];
+    const quantityToAdd = productQuantities[product.productId] || 0; // Módosítás itt
 
-    if (existingCartItemIndex !== -1) {
-      updatedCartItems = [...cartitems];
-      updatedCartItems[existingCartItemIndex] = {
-        ...cartitems[existingCartItemIndex],
-        quantity:
-          cartitems[existingCartItemIndex].quantity +
-          productQuantities[product.productId],
-      };
+    const totalQuantity = quantityInCart + quantityToAdd;
+
+    if (totalQuantity <= product.stock) {
+      if (quantityToAdd > 0) {
+        if (product.stock === 0) {
+          setSnackbarInfo({
+            open: true,
+            message: "This product is out of stock.",
+            severity: "error",
+          });
+        } else if (product.stock <= 5) {
+          setSnackbarInfo({
+            open: true,
+            message:
+              "Low stock warning: This product has limited stock available.",
+            severity: "warning",
+          });
+        }
+
+        const existingCartItemIndex = cartitems.findIndex(
+          (item) => item.productId === product.productId
+        );
+
+        let updatedCartItems = [];
+
+        if (existingCartItemIndex !== -1) {
+          updatedCartItems = [...cartitems];
+          updatedCartItems[existingCartItemIndex] = {
+            ...cartitems[existingCartItemIndex],
+            quantity: cartitems[existingCartItemIndex].quantity + quantityToAdd,
+          };
+        } else {
+          updatedCartItems = [
+            ...cartitems,
+            {
+              ...product,
+              quantity: quantityToAdd,
+            },
+          ];
+        }
+
+        setCartItems(updatedCartItems);
+        sendCartToBackend(updatedCartItems);
+
+        setSnackbarInfo({
+          open: true,
+          message: "Product added to cart successfully.",
+          severity: "success",
+        });
+      } else {
+        setSnackbarInfo({
+          open: true,
+          message: "Please add a quantity before adding to cart.",
+          severity: "warning",
+        });
+      }
     } else {
-      updatedCartItems = [
-        ...cartitems,
-        {
-          ...product,
-          quantity: productQuantities[product.productId],
-        },
-      ];
+      setSnackbarInfo({
+        open: true,
+        message: `You cannot add more than ${product.stock} ${
+          product.stock === 1 ? "item" : "items"
+        } to the cart.`,
+        severity: "warning",
+      });
     }
+  };
 
-    setCartItems(updatedCartItems);
-
-    console.log("Termék hozzáadása a kosárhoz:", product);
-
-    sendCartToBackend(updatedCartItems);
+  const handleCloseSnackbar = () => {
+    setSnackbarInfo({ ...snackbarInfo, open: false });
   };
 
   const handleChange = (event, value) => {
@@ -272,89 +348,104 @@ export default function Products() {
           maxWidth="md"
         >
           <Grid container spacing={7}>
-            {displayedProducts.map((product, index) => (
-              <Grid
-                item
-                key={`product_${product.productId}_${index}`}
-                xs={12}
-                sm={6}
-                md={4}
-              >
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    backgroundColor: "#ffcc80",
-                    borderRadius: "10px",
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.8)",
-                  }}
+            {displayedProducts.map((product, index) => {
+              const { quantityColor, message } = getStockStyles(product);
+
+              return (
+                <Grid
+                  item
+                  key={`product_${product.productId}_${index}`}
+                  xs={12}
+                  sm={6}
+                  md={4}
                 >
-                  <CardMedia
-                    component="div"
+                  <Card
                     sx={{
-                      pt: "86.25%",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      backgroundColor: "#ffcc80",
+                      borderRadius: "10px",
+                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.8)",
                     }}
-                    image={product.image}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {product.name}
-                    </Typography>
-
-                    <div style={{ marginBottom: "6px" }}></div>
-
-                    <Typography paragraph>{product.description}</Typography>
-
-                    <div style={{ marginBottom: "6px" }}></div>
-
-                    <Typography>Price: {product.price}</Typography>
-
-                    <div style={{ marginBottom: "6px" }}></div>
-
-                    <Typography>Available: {product.stock}</Typography>
-                  </CardContent>
-
-                  <TextField
-                    label="Quantity"
-                    type="number"
-                    value={productQuantities[product.productId] || 0}
-                    onChange={(e) =>
-                      handleQuantityChange(
-                        product.productId,
-                        parseInt(e.target.value, 10)
-                      )
-                    }
-                    InputProps={{
-                      sx: {
-                        "& .MuiInput-input:focus": {
-                          backgroundColor: "#FF5733", // Narancssárga háttérszín fókuszban
-                          color: "#FFFFFF", // Fehér szöveg fókuszban
-                          borderColor: "#FF5733 !important", // Narancssárga keret fókuszban
-                          outline: "none", // Eltávolítja a beépített fókusz keretet
-                        },
-                      },
-                    }}
-                  />
-
-                  <CardActions>
-                    <Button
-                      size="small"
-                      onClick={() => handleAddToCart(product)}
+                  >
+                    <CardMedia
+                      component="div"
                       sx={{
-                        backgroundColor: "#FF5733", // Saját háttérszín
-                        color: "#FFFFFF", // Saját szövegszín
-                        "&:hover": {
-                          backgroundColor: "#FF8040", // Saját háttérszín egér fölé helyezéskor
+                        pt: "86.25%",
+                      }}
+                      image={product.image}
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {product.name}
+                      </Typography>
+
+                      <div style={{ marginBottom: "6px" }}></div>
+
+                      <Typography paragraph>{product.description}</Typography>
+
+                      <div style={{ marginBottom: "6px" }}></div>
+
+                      <Typography>Price: {product.price}</Typography>
+
+                      <div style={{ marginBottom: "6px" }}></div>
+
+                      <Typography>Available: {product.stock}</Typography>
+                    </CardContent>
+
+                    <TextField
+                      label="Quantity"
+                      type="number"
+                      value={productQuantities[product.productId] || 0}
+                      onChange={(e) =>
+                        handleQuantityChange(
+                          product.productId,
+                          parseInt(e.target.value, 10)
+                        )
+                      }
+                      InputProps={{
+                        sx: {
+                          "& .MuiInput-input:focus": {
+                            backgroundColor: "#FF5733", // Narancssárga háttérszín fókuszban
+                            color: "#FFFFFF", // Fehér szöveg fókuszban
+                            borderColor: "#FF5733 !important", // Narancssárga keret fókuszban
+                            outline: "none", // Eltávolítja a beépített fókusz keretet
+                          },
+                          color: quantityColor, // Mennyiség színének beállítása
                         },
                       }}
-                    >
-                      Add to Cart
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
+                    />
+
+                    {message && (
+                      <Typography
+                        variant="body2"
+                        color={quantityColor} // Üzenet színének beállítása
+                        gutterBottom
+                      >
+                        {message}
+                      </Typography>
+                    )}
+
+                    <CardActions>
+                      <Button
+                        size="small"
+                        onClick={() => handleAddToCart(product)}
+                        sx={{
+                          backgroundColor: "#FF5733", // Saját háttérszín
+                          color: "#FFFFFF", // Saját szövegszín
+                          "&:hover": {
+                            backgroundColor: "#FF8040", // Saját háttérszín egér fölé helyezéskor
+                          },
+                        }}
+                      >
+                        Add to Cart
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              );
+            })}
           </Grid>
           <PaginationControlled
             onChange={handleChange}
@@ -380,6 +471,19 @@ export default function Products() {
         </Typography>
         <Copyright />
       </Box>
+      <Snackbar
+        open={snackbarInfo.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarInfo.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarInfo.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 }

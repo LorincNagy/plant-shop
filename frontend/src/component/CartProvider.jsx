@@ -15,8 +15,8 @@ export function CartProvider({ children }) {
   }, [cartitems]);
 
   const handleSignOut = () => {
-    setCartItems([]);
-    localStorage.clear();
+    // setCartItems([]);
+    localStorage.removeItem("token");
     navigate("/signin");
   };
 

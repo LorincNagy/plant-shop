@@ -163,12 +163,7 @@ export default function SignUp() {
             <Typography component="h1" variant="h5">
               Sign Up to Plantify
             </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -191,7 +186,6 @@ export default function SignUp() {
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 name="address"
                 label="Address"
@@ -205,17 +199,16 @@ export default function SignUp() {
                 fullWidth
                 name="email"
                 label="Email Address"
-                type="text"
+                type="email" // Az email típus használata az email validációhoz
                 id="email"
                 autoComplete="email"
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 name="phoneNumber"
                 label="Phone Number"
-                type="text"
+                type="tel" // A tel típus használata a telefonszám mezőhöz
                 id="phoneNumber"
                 autoComplete="tel"
               />

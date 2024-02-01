@@ -19,7 +19,7 @@ function Orders() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const {  handleSignOut } = useCart();
+  const { handleSignOut } = useCart();
 
   const tableStyle = {
     minWidth: 650,
@@ -38,6 +38,14 @@ function Orders() {
     color: "#009688",
     fontWeight: "bold",
     fontSize: "16px",
+  };
+
+  const formatOrderDate = (orderDate) => {
+    const date = new Date(orderDate);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
   };
 
   const handleNavigateToProducts = () => {
@@ -148,7 +156,7 @@ function Orders() {
                     style={{ ...cellStyle2, width: "20%" }}
                     align="center"
                   >
-                    {order.orderDate.replace("T", ", ")}
+                    {formatOrderDate(order.orderDate)}
                   </TableCell>
                   <TableCell
                     style={{ ...cellStyle2, width: "20%" }}
