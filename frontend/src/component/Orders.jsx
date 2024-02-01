@@ -40,14 +40,6 @@ function Orders() {
     fontSize: "16px",
   };
 
-  const formatOrderDate = (orderDate) => {
-    const date = new Date(orderDate);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  };
-
   const handleNavigateToProducts = () => {
     navigate("/products");
   };
@@ -151,12 +143,11 @@ function Orders() {
                   >
                     {order.id}
                   </TableCell>
-
                   <TableCell
                     style={{ ...cellStyle2, width: "20%" }}
                     align="center"
                   >
-                    {formatOrderDate(order.orderDate)}
+                    {order.orderDate.replace("T", ",")}
                   </TableCell>
                   <TableCell
                     style={{ ...cellStyle2, width: "20%" }}

@@ -240,18 +240,18 @@ export default function Products() {
   // Oldalváltásnál csak a jelenlegi oldalon lévő termékeket jelenítjük meg
   const displayedProducts = displayProducts(products, page, pageSize);
 
+  const containerStyle = {
+    backgroundImage: `url('https://images.unsplash.com/photo-1603912699214-92627f304eb6?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2825')`,
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    minHeight: "100vh",
+  };
+
   return (
     <ThemeProvider theme={customTheme}>
       <CssBaseline />
       <main>
-        <Box
-          sx={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1603912699214-92627f304eb6?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2825')`,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            minHeight: "100vh",
-          }}
-        >
+        <Box sx={containerStyle}>
           <Box
             sx={{
               position: "fixed",
