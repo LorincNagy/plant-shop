@@ -25,6 +25,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> missingCartItem(NoSuchElementException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -68,4 +69,3 @@ public class CartController {
 }
 
 
-//A @AuthenticationPrincipal annotációval az aktuálisan bejelentkezett felhasználóhoz kapcsolódó Person objektumot fogjuk megkapni a person paraméterben. Ezt az objektumot a Spring Security használja a felhasználó azonosítására a JWT token alapján.

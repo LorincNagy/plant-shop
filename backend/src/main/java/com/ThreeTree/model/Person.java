@@ -80,5 +80,3 @@ public class Person implements UserDetails {
     }
 }
 
-
-//Az, hogy melyik osztálynál van a kulcs (pl. person_id vagy cart_id), az attól függ, hogy melyik osztályhoz tartozik az adott kapcsolat. A jelenlegi megvalósítás szerint egy Person objektumhoz tartozik egy Cart objektum, tehát a Cart osztálynál van a kulcs, amely hivatkozik a Person-re.

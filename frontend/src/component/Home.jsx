@@ -38,7 +38,7 @@ function Index() {
           minHeight: "100vh",
           padding: "1em",
           position: "relative",
-          animation: `${moveBackground} 35s infinite linear alternate`,
+          animation: `${moveBackground} 40s infinite linear alternate`,
         }}
       >
         <Typography
