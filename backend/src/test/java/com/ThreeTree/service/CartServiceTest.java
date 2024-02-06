@@ -40,7 +40,7 @@ class CartServiceTest {
 
     @Test
     void testAddOrUpdateCartItems() {
-        // Elkészítünk néhány teszt adatot
+
         Long productId1 = 1L;
         Long productId2 = 2L;
         Person person = new Person();
@@ -53,36 +53,36 @@ class CartServiceTest {
         Product product2 = new Product();
         product2.setProductId(productId2);
 
-        // Létrehozunk egy NewCartItemRequest-et az új elemek hozzáadásához
+
         NewCartItemRequest addRequest1 = new NewCartItemRequest(product1.getProductId(), 3);
         NewCartItemRequest addRequest2 = new NewCartItemRequest(product2.getProductId(), 2);
 
-        // Létrehozunk egy NewCartItemRequest-et a már meglévő elemek frissítéséhez
+
         NewCartItemRequest updateRequest1 = new NewCartItemRequest(product1.getProductId(), 5);
 
-        // Mockoljuk a ProductService-t
+
         when(productService.findProductById(productId1)).thenReturn(Optional.of(product1));
         when(productService.findProductById(productId2)).thenReturn(Optional.of(product2));
 
-        // Teszteljük a CartService addCartItems metódusát az új elemek hozzáadásával
+
         cartService.addCartItems(List.of(addRequest1, addRequest2), person);
 
-        // Ellenőrizzük, hogy a megfelelő metódusokat hívták-e meg az új elemek hozzáadása során
+
         verify(cartItemService, times(2)).addCartItem(any());
 
-        // Ellenőrizzük, hogy a CartItemek száma megfelelő
+
         assertEquals(2, cart.getCartItems().size());
 
-        // Teszteljük a CartService addCartItems metódusát a már meglévő elemek frissítésével
+
         cartService.addCartItems(List.of(updateRequest1), person);
 
-        // Ellenőrizzük, hogy a megfelelő metódusokat hívták-e meg a frissítés során
+
         verify(cartItemService, times(3)).addCartItem(any());
 
-        // Ellenőrizzük, hogy a CartItemek száma változatlan
+
         assertEquals(2, cart.getCartItems().size());
 
-        // Ellenőrizzük, hogy a már meglévő CartItem frissítése helyesen történt
+
         CartItem updatedCartItem = cart.findCartItemByProduct(productService.findProductById(productId1).orElse(null));
         System.out.println(updatedCartItem);
         assertNotNull(updatedCartItem);
@@ -92,32 +92,32 @@ class CartServiceTest {
 
     @Test
     public void testRemoveFromCart() {
-        // Elkészítünk néhány teszt adatot
+
         Long cartItemId = 1L;
         Person person = new Person();
         Cart cart = new Cart();
         person.setCart(cart);
 
-        // Létrehozzuk a cartItemToRemove objektumot
+
         CartItem cartItemToRemove = new CartItem();
         cartItemToRemove.setId(cartItemId);
         cartItemToRemove.setCart(cart);
         cartItemToRemove.setProduct(new Product());
         cartItemToRemove.setQuantity(3);
 
-        // Mockoljuk a szükséges metódusokat
+
         when(cartItemService.findById(cartItemId)).thenReturn(Optional.of(cartItemToRemove));
 
-        // Teszteljük a removeFromCart metódust
+
         cartService.removeFromCart(cartItemId, person);
 
-        // Ellenőrizzük, hogy a megfelelő metódusokat hívták-e meg a cartItem eltávolítása során
+
         verify(cartItemService).delete(cartItemToRemove);
 
-        // Ellenőrizzük, hogy a cart frissítve lett
+
         verify(cartRepository).save(cart);
 
-        // Ellenőrizzük, hogy a cart tartalmazza-e még a cartItem-et
+
         assertFalse(cart.getCartItems().contains(cartItemToRemove));
     }
 
@@ -175,17 +175,16 @@ class CartServiceTest {
         cart.addCartItem(cartItem);
 
         cartService.processCartItemsAndCreateOrder(cart, order);
-        // Ellenőrizzük, hogy a szükséges metódusokat megfelelő számú alkalommal hívták-e meg
+
         verify(orderItemService, times(1)).saveOrderItem(any(OrderItem.class));
         verify(productService, times(1)).saveProduct(any(Product.class));
         verify(cartItemService, times(1)).delete(any(CartItem.class));
 
-        // Ellenőrizzük, hogy az order objektumhoz hozzáadtak-e megfelelő számú OrderItem-et
+
         assertEquals(1, order.getOrderItems().size());
         assertEquals(cartItem.getProduct(), order.getOrderItems().get(0).getProduct());
-        // Ellenőrizzük, hogy a cart üres lett-e
         assertTrue(cart.getCartItems().isEmpty());
-        assertEquals(product.getStock(),90);
+        assertEquals(product.getStock(), 90);
 
     }
 }
