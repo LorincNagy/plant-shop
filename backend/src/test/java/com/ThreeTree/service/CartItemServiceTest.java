@@ -61,18 +61,18 @@ class CartItemServiceTest {
 
     @Test
     void testDelete() {
-        // Előkészítés
+
         Long cartItemId = 1L;
         CartItem cartItem = new CartItem();
         cartItem.setId(cartItemId);
 
-        // Mock viselkedés beállítása
+
         doNothing().when(cartItemRepository).delete(cartItem);
 
-        // Metódus meghívása
+
         cartItemService.delete(cartItem);
 
-        // Ellenőrzés, hogy a delete metódus meghívódott-e pontosan egyszer a megadott cartItem-mal
+
         verify(cartItemRepository, times(1)).delete(cartItem);
     }
 
