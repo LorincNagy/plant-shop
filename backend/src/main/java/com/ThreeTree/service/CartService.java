@@ -65,8 +65,7 @@ public class CartService {
 
     private CartItem findCartItemById(Long cartItemId) {
         Optional<CartItem> optionalCartItem = cartItemService.findById(cartItemId);
-        return optionalCartItem.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND,
-                "Nem található ilyen azonosítójú CartItem: " + cartItemId));
+        return optionalCartItem.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Nem található ilyen azonosítójú CartItem: " + cartItemId));
     }
 
     private void removeCartItemFromCart(Cart cart, CartItem cartItemToRemove) {
@@ -76,8 +75,7 @@ public class CartService {
 
     private Product getExistingProduct(Long productId) {
         Optional<Product> optionalProduct = productService.findProductById(productId);
-        return optionalProduct.orElseThrow(() ->
-                new HttpClientErrorException(HttpStatus.NOT_FOUND, "Nem található termék azonosítóval: " + productId));
+        return optionalProduct.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Nem található termék azonosítóval: " + productId));
     }
 
 
@@ -94,9 +92,13 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-
-    public void processCartItemsAndCreateOrder(Cart cart, Order order) {//pétertöl megkérdezni oop enkapszulácionak megfelel-e ha nem cart terál hanem cartservicben elkérem cart.getcartitems()?
+    @Transactional
+    public void processCartItemsAndCreateOrder(Cart cart, Order order) {
+        System.out.println(cart);//pétertöl megkérdezni oop enkapszulácionak megfelel-e ha nem cart terál hanem cartservicben elkérem cart.getcartitems()?
         for (CartItem cartItem : cart.getCartItems()) {
+
+
+            System.out.println(cart.getCartItems());
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
@@ -110,7 +112,6 @@ public class CartService {
 
             orderItemService.saveOrderItem(orderItem);
             order.addOrderItem(orderItem);
-
             cartItemService.delete(cartItem);
         }
         cart.deleteCartItems();
