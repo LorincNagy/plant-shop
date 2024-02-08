@@ -33,6 +33,7 @@ class CartServiceTest {
     @Mock
     private OrderItemService orderItemService;
 
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this); // Inicializálja a mockokat és az injektálást is elvégzi
@@ -143,7 +144,7 @@ class CartServiceTest {
         verify(cartItemService, times(3)).delete(any());
 
 
-        verify(cart).deleteCartItems();
+       assertTrue(cart.getCartItems().isEmpty());
 
 
         verify(cartRepository).save(cart);
