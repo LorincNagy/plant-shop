@@ -33,10 +33,11 @@ public class ProductController {
     }
 
 
-//    @GetMapping("/{productId}")
-//    public Product getProductById(@PathVariable("productId") Long id) {
-//        return productService.getProductById(id);
-//    }
+    @GetMapping("/{productId}")
+    public ResponseEntity<NewProductResponse> getProductById(@PathVariable("productId") Long id) {
+        NewProductResponse product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
+    }
 
     @PostMapping("/products")
     public void addProduct(@RequestBody Product product) {

@@ -61,8 +61,8 @@ class CartServiceTest {
         NewCartItemRequest updateRequest1 = new NewCartItemRequest(product1.getProductId(), 5);
 
 
-        when(productService.findProductById(productId1)).thenReturn(Optional.of(product1));
-        when(productService.findProductById(productId2)).thenReturn(Optional.of(product2));
+        when(productService.findProductById(productId1)).thenReturn(product1);
+        when(productService.findProductById(productId2)).thenReturn(product2);
 
 
         cartService.addCartItems(List.of(addRequest1, addRequest2), person);
@@ -83,7 +83,7 @@ class CartServiceTest {
         assertEquals(2, cart.getCartItems().size());
 
 
-        CartItem updatedCartItem = cart.findCartItemByProduct(productService.findProductById(productId1).orElse(null));
+        CartItem updatedCartItem = cart.findCartItemByProduct(productService.findProductById(productId1));
         System.out.println(updatedCartItem);
         assertNotNull(updatedCartItem);
         assertEquals(5, updatedCartItem.getQuantity());

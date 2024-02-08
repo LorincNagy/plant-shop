@@ -74,8 +74,8 @@ public class CartService {
 
 
     private Product getExistingProduct(Long productId) {
-        Optional<Product> optionalProduct = productService.findProductById(productId);
-        return optionalProduct.orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Nem található termék azonosítóval: " + productId));
+        return productService.findProductById(productId);
+
     }
 
 

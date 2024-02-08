@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,9 +42,24 @@ public class ProductService {
     }
 
 
-    public Optional<Product> findProductById(Long id) {
-        return productRepository.findById(id);
+    public Product findProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
     }
 
 
+    public NewProductResponse getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
+
+        return new NewProductResponse(
+                product.getName(),
+                product.getSku(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock(),
+                product.getImage(),
+                product.getProductId()
+        );
+    }
 }

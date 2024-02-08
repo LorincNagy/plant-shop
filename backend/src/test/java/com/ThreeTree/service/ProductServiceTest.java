@@ -12,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -82,10 +84,86 @@ class ProductServiceTest {
     }
 
     @Test
-    void saveProduct() {
+    public void testSaveProduct() {
+        // Arrange
+        Product product = new Product();
+
+        // Act
+        productService.saveProduct(product);
+
+        // Assert
+        verify(productRepository).save(product);
     }
 
     @Test
     void findProductById() {
+
+        Long id = 1L;
+        Product product = new Product();
+        product.setProductId(id);
+        when(productRepository.findById(id)).thenReturn(Optional.of(product));
+
+        // Act
+        Product result = productService.findProductById(id);
+
+        assertNotNull(result);
+        assertEquals(product, result);
     }
+
+
+    @Test
+    public void testFindProductById_NotFound() {
+        // Arrange
+        Long id = 2L;
+        when(productRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(NoSuchElementException.class, () -> {
+            productService.findProductById(id);
+        });
+    }
+
+
+    @Test
+    public void testGetProductById() {
+        // Arrange
+        Long id = 1L;
+        Product product = new Product();
+        product.setProductId(id);
+        product.setName("Test Product");
+        product.setSku("SKU123");
+        product.setDescription("Test Description");
+        product.setPrice(BigDecimal.valueOf(10.99));
+        product.setStock(5);
+        product.setImage("test.jpg");
+        product.setProductId(123L);
+
+        when(productRepository.findById(id)).thenReturn(Optional.of(product));
+
+        // Act
+        NewProductResponse result = productService.getProductById(id);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("Test Product", result.getName());
+        assertEquals("SKU123", result.getSku());
+        assertEquals("Test Description", result.getDescription());
+        assertEquals(BigDecimal.valueOf(10.99), result.getPrice());
+        assertEquals(5, result.getStock());
+        assertEquals("test.jpg", result.getImage());
+        assertEquals(123L, result.getProductId());
+    }
+
+    @Test
+    public void testGetProductById_ProductNotFound() {
+        // Arrange
+        Long id = 2L;
+        when(productRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(NoSuchElementException.class, () -> {
+            productService.getProductById(id);
+        });
+    }
+
 }
