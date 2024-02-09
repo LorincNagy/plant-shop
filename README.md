@@ -5,22 +5,22 @@ The Plant-Shop project is developed as a web application designed to efficiently
 
 ## Technology Stack
 
-### Frontend:
+## Frontend:
 - JavaScript/ES6
 - React
 - HTML/CSS
 - Material UI
 
-### Backend:
+## Backend:
 - Spring Boot
 - Spring Data JPA
 - JPA (Java Persistence API)
 - Hibernate
 - PostgreSQL
 
-## Server side
+# Server side
 
-### Database Configuration
+## Database Configuration
 Create the PostgreSQL Database:
 
 1. Install PostgreSQL if it's not already installed.
@@ -48,7 +48,7 @@ Set the following environment variables to configure the connection details requ
 
 After setting these environment variables, the application will use them to establish a connection to the PostgreSQL database. Make sure you have configured these variables with the correct values for your project to work as expected.
 
-### Building and Running the Application
+## Building and Running the Application
 Change to the '/backend' directory by using the following command:
 cd ./backend
 
@@ -60,7 +60,7 @@ mvn clean package
 2. Once the JAR file is built, run the Spring Boot application using the JAR file:
 java -jar target/security-0.0.1-SNAPSHOT.jar
 
-### Alternatively, you can use Docker Compose:
+## Alternatively, you can use Docker Compose:
 
 3. Use Docker Compose with your environment variables:
 docker-compose up -d
@@ -122,7 +122,7 @@ To run the code, navigate to the "./frontend" directory and execute the followin
 npm run dev
 This will start your frontend using the Vite package on port 5173. You can access the application in your preferred web browser by opening the following URL: http://localhost:5173
 
-# Running Unit Tests
+## Running Unit Tests
 To ensure the quality and functionality of our backend services, comprehensive unit tests have been implemented. These tests can be executed to verify the behavior of individual units of code and ensure that they meet our expected outcomes.
 
 ## How to Run Tests
