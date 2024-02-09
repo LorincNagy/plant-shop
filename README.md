@@ -71,24 +71,23 @@ The application will start in a Docker container, and it will also run on port 8
 ## React Frontend Configuration for Docker
 For deploying your React application, you have two primary options depending on your development and production needs. You can configure the React app to run with its own development server for live reloading features, or you can serve it through an Express server for a more production-like environment.
 
-### Option 1: Running with React Development Server
+## Option 1: Running with React Development Server
 To run your React application in a Docker container using the React development server, which is useful for development due to its live reloading capability, follow this configuration in your DockerfileFrontend:
 
-# BUILD REACT FRONTEND:
+## BUILD REACT FRONTEND:
 FROM node:18.14.0-alpine as frontend
 WORKDIR /app/frontend
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install
 COPY . .
-# Start the React development server
 CMD ["npm", "run", "dev"]
 
 By default, this server runs on port 5173 so make sure your docker-compose.yml maps this port correctly to access the application on localhost:5173.
 
 ## Option 2: Serving through Express Server
 
-# BUILD REACT FRONTEND:
+## BUILD REACT FRONTEND:
 FROM node:18.14.0-alpine as frontend
 WORKDIR /app/frontend
 COPY package.json ./
