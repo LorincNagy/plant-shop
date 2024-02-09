@@ -42,6 +42,8 @@ jobs:
 
       - name: Build and push Docker images
         run: |
+          export DOCKER_HUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
           docker-compose build
-          docker-compose push 
+          docker-compose push
+      
           
