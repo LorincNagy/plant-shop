@@ -5,6 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: DockerfileBackend
+    image: ${DOCKER_HUB_USERNAME}/backend-image-name:tag
     ports:
       - "8080:8080"
     environment:
@@ -15,18 +16,17 @@ services:
       USER_EMAIL: ${USER_EMAIL}
       USER_PASSWORD: ${USER_PASSWORD}
 
-
   frontend:
     container_name: threetree-frontend
     build:
       context: ./frontend
       dockerfile: DockerfileFrontend
+    image: ${DOCKER_HUB_USERNAME}/frontend-image-name:tag
     ports:
       - "3000:3000"
 
-
   db:
-    container_name: threetree
+    container_name: threetree-db
     image: postgres:latest
     environment:
       POSTGRES_DB: customer
@@ -37,4 +37,3 @@ services:
       - /data/postgres
     ports:
       - "5532:5432"
-
