@@ -4,6 +4,7 @@
 The Plant-Shop project is developed as a web application designed to efficiently manage plant orders and purchases. It utilizes a wide range of technologies, including Spring Boot and Spring Data JPA for backend development, PostgreSQL for database management, and React for the frontend. This comprehensive solution offers seamless plant ordering and purchasing capabilities and has been Dockerized for simplified deployment and management.
 
 ## Technology Stack
+
 ### Frontend:
 - JavaScript/ES6
 - React
@@ -59,12 +60,55 @@ mvn clean package
 2. Once the JAR file is built, run the Spring Boot application using the JAR file:
 java -jar target/security-0.0.1-SNAPSHOT.jar
 
-Alternatively, you can use Docker Compose:
+### Alternatively, you can use Docker Compose:
 
 3. Use Docker Compose with your environment variables:
 docker-compose up -d
 
 The application will start in a Docker container, and it will also run on port 8080 by default.
+
+
+## React Frontend Configuration for Docker
+For deploying your React application, you have two primary options depending on your development and production needs. You can configure the React app to run with its own development server for live reloading features, or you can serve it through an Express server for a more production-like environment.
+
+### Option 1: Running with React Development Server
+To run your React application in a Docker container using the React development server, which is useful for development due to its live reloading capability, follow this configuration in your DockerfileFrontend:
+
+# BUILD REACT FRONTEND:
+FROM node:18.14.0-alpine as frontend
+WORKDIR /app/frontend
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+COPY . .
+# Start the React development server
+CMD ["npm", "run", "dev"]
+
+By default, this server runs on port 5173 so make sure your docker-compose.yml maps this port correctly to access the application on localhost:5173.
+
+## Option 2: Serving through Express Server
+
+# BUILD REACT FRONTEND:
+FROM node:18.14.0-alpine as frontend
+WORKDIR /app/frontend
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+## BUILD EXPRESS FRONTEND SERVER:
+FROM node:18.14.0-alpine as express-server
+WORKDIR /app/express-server
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+COPY server.js .
+COPY --from=frontend /app/frontend/build ./static
+EXPOSE 3000
+CMD ["node", "server.js"]
+
+The Express server listens on port 3000, so make sure your docker-compose.yml maps this port correctly to access the application on localhost:3000.
 
 
 # Client side
@@ -78,5 +122,25 @@ Pay attention to the port of your REST API. By default, it will bind to port 808
 To run the code, navigate to the "./frontend" directory and execute the following command:
 npm run dev
 This will start your frontend using the Vite package on port 5173. You can access the application in your preferred web browser by opening the following URL: http://localhost:5173
+
+# Running Unit Tests
+To ensure the quality and functionality of our backend services, comprehensive unit tests have been implemented. These tests can be executed to verify the behavior of individual units of code and ensure that they meet our expected outcomes.
+
+## How to Run Tests
+Navigating to the Backend Directory: First, navigate to the backend directory of the Plant-Shop project where the unit tests are located. You can do this by opening a command prompt or terminal and running the following command:
+
+
+cd D:\Own Projects\plant-shop\backend
+This will change your current directory to the backend part of the Plant-Shop project.
+
+## Executing the Tests
+Once you are in the backend directory, you can run the unit tests by executing the mvn test command. This command will trigger Maven to run all the unit tests defined in the project:
+
+mvn test
+Ensure that Maven is installed and configured properly on your system to execute this command successfully.
+
+Locating Unit Tests
+The unit tests for the backend services can be found within the Backend/src/test directory. This directory contains test classes for various components of the application, each designed to test specific functionalities and ensure they operate as expected.
+By running these tests regularly, you contribute to the stability and reliability of the Plant-Shop project, helping us maintain a high standard of quality for all backend functionalities.
 
 
