@@ -135,7 +135,7 @@ This will change your current directory to the backend part of the Plant-Shop pr
 ## Executing the Tests
 Once you are in the backend directory, you can run the unit tests by executing the mvn test command. This command will trigger Maven to run all the unit tests defined in the project:
 
-mvn test
+## mvn test
 Ensure that Maven is installed and configured properly on your system to execute this command successfully.
 
 Locating Unit Tests
