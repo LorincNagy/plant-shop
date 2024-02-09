@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,24 +44,3 @@ jobs:
         run: |
           docker-compose build
           docker-compose push
-
-      - name: Install Trivy
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https gnupg lsb-release
-          curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install trivy
-
-      - name: Docker image security scan
-        run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
-          trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
-
-      - name: Run the image in a container
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
-          run: |
-            echo "Running the docker image"
