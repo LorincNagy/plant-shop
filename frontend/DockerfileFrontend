@@ -19,30 +19,3 @@ COPY --from=frontend /app/frontend/dist ./static
 EXPOSE 3000
 CMD ["node", "server.js"]
 
-
-
-#A CMD ["npm", "run", "dev"] parancsot általában a React fejlesztői szerver indítására használják, ami a kódot biztosítja a böngésző számára fejlesztési célokra. Ezt a szervert általában élő frissítésekkel (live reload) és egyéb fejlesztőbarát funkciókkal használják, hogy egyszerűvé tegyék a frontend fejlesztését.
-#
-#A CMD ["node", "server.js"] parancs pedig egy Express.js szerver indítását jelenti, ami a production környezetben vagy a végső alkalmazásban a frontend kiszolgálásáért felelős. Ebben a módban a React alkalmazás már előre buildelve van és a statikus fájlokra támaszkodik.
-#
-#Tehát ha a Docker konténerben a fejlesztői környezetben szeretnéd futtatni a frontend alkalmazást, akkor használhatod a CMD ["npm", "run", "dev"] parancsot. Ha pedig a production környezetben futtatnád, akkor a CMD ["node", "server.js"] parancsot használhatod, ami az Express.js szerver indítását jelenti a frontend kiszolgálásához.
-
-#A CMD ["npm", "run", "dev"] parancs általában a fejlesztői környezetben használatos, és a React fejlesztői szerverét indítja, ami élő frissítéseket és egyéb fejlesztőbarát funkciókat nyújt. Ezzel a módszerrel a React alkalmazásodat a fejlesztő böngészőben futtatod, és könnyen módosíthatod a forráskódot.
-#
-#A CMD ["node", "server.js"] parancs pedig a production környezetben vagy a végső alkalmazásban használatos. Itt egy Express.js szerver szolgálja ki a buildelt React alkalmazásod statikus fájljait. Ebben az esetben a React alkalmazás már előre buildelve van, és a statikus fájlokra támaszkodik.
-#
-#Tehát mindkét módszerrel elérheted, hogy a böngészőnek szolgáltasd a React alkalmazásodat, de attól függően, hogy milyen céllal használod, választhatsz közöttük. Az első módszer alkalmas a fejlesztésre és élő frissítésekre, míg a második módszer alkalmas a produkciós környezetre, ahol a buildelt alkalmazást szolgálod ki.
-
-#A két megközelítés közötti különbség a fejlesztői környezetben és a produkciós környezetben való futtatásban és a használt eszközökben rejlik:
-#
-#Fejlesztői környezetben React fejlesztői szerverrel:
-#
-#Ebben az esetben a React alkalmazásodat a fejlesztői szerver szolgálja ki a böngészőnek.
-#A React fejlesztői szerver élő frissítéseket (live reload) és egyéb fejlesztőbarát funkciókat nyújt, például hibakeresést.
-#A fejlesztők a változtatásokat azonnal látják a böngészőben, amint mentik a forráskódot, ami gyorsabb és hatékonyabb fejlesztést tesz lehetővé.
-#Produkciós környezetben Express.js szerverrel:
-#
-#Ebben az esetben az Express.js szerver szolgálja ki a buildelt React alkalmazásodat a böngészőnek.
-#A React alkalmazás már előre buildelve van, és a statikus fájlokra támaszkodik, ami optimalizált és gyorsabb működést eredményez.
-#A szerver lehetőséget nyújt a teljesítmény, biztonság és terheléselosztás testreszabására.
-#Mindkét esetben a végfelhasználók ugyanazt a weboldalt láthatják, hiszen a buildelt React alkalmazás azonos marad. Azonban a fejlesztői szerver segítségével a fejlesztők könnyebben és hatékonyabban dolgozhatnak, mivel élő nézeteket láthatnak és gyorsan tesztelhetik a változtatásokat a fejlesztés során. A produkciós szerver pedig a kész alkalmazás biztosítja a végfelhasználók számára a nagy teljesítményű és stabil működést.

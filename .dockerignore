@@ -1,0 +1,24 @@
+# Ignore IntelliJ IDEA files
+.idea/
+
+# Ignore Node.js modules
+node_modules/
+
+# Ignore npm debug log
+npm-debug.log
+
+# Ignore Git related files and folders
+.git/
+
+# Ignore Maven related files and folders
+target/
+
+# Ignore frontend build output (for example, if you build React app)
+frontend/build/
+
+# Ignore other temporary or build-related files
+*.log
+*.tmp
+*.temp
+*.swp
+
