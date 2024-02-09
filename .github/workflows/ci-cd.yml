@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17' # Java verzió beállítása
+          distribution: ''    # Üresen hagyjuk, ha nem JDK 8-at használunk
 
       - name: Install Maven
         run: |
