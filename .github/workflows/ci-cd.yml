@@ -13,11 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up JDK and Maven
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
-          maven-version: '3.8.5'
+          java-version: '17' # Java verzió beállítása
+
+      - name: Install Maven
+        run: |
+          sudo apt update
+          sudo apt install maven -y
 
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -27,8 +31,6 @@ jobs:
           cd backend
           mvn test
 
-
-      #kjl
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
