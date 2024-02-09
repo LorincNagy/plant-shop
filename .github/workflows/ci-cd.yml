@@ -16,8 +16,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '17' # Java verzió beállítása
-          distribution: ''    # Üresen hagyjuk, ha nem JDK 8-at használunk
+          java-version: '1.8'
 
       - name: Install Maven
         run: |
