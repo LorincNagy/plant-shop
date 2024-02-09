@@ -9,9 +9,8 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -20,15 +19,23 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'temurin' # Az Eclipse Temurin disztribúcióját használja, ami az AdoptOpenJDK utódja
+          distribution: 'temurin'
 
-      - name: Run unit tests
+      - name: Build and test backend
         run: |
-          cd backend
-          mvn test
+               cd backend
+               mvn package
+               mvn test
+#      mvn package -DskipTests # Teszteket kihagyva, ha csak a build sikerességét szeretnéd ellenőrizni
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build 
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -38,10 +45,14 @@ jobs:
           docker-compose build
           docker-compose push
 
+      - name: Docker image security scan
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+          trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+
       - name: Run the image in a container
         uses: addnab/docker-run-action@v3
         with:
           image: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
           run: |
             echo "Running the docker image"
-
