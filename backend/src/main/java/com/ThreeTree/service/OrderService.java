@@ -1,12 +1,9 @@
 package com.ThreeTree.service;
 
-import com.ThreeTree.dao.CartRepository;
 import com.ThreeTree.dao.OrderRepository;
-import com.ThreeTree.dao.PersonRepository;
 import com.ThreeTree.dto.NewOrderRequest;
 import com.ThreeTree.dto.NewOrderResponse;
 import com.ThreeTree.model.*;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -46,7 +42,7 @@ public class OrderService {
 
     //ORDER SERVICE CLASS
     @Transactional
-    public Order saveOrder(NewOrderRequest request, Person person) {
+    public void saveOrder(NewOrderRequest request, Person person) {
         Cart cart = person.getCart();
 
         Order order = new Order();
@@ -65,7 +61,7 @@ public class OrderService {
         orderRepository.save(order);
         cartService.save(cart);
         personService.updatePerson(order, person, request);
-        return order;
+
     }
 
 }

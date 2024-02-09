@@ -72,7 +72,7 @@ class OrderServiceTest {
         verify(orderRepository).findById(orderId);
     }
 
-    //Ha a orderService.getOrderById(orderId) hívás eredménye egy üres Optional, akkor a orElseThrow metódus kivételt dob. Az assertThrows metódus ezt a kivételt várja, és ha ténylegesen dobódik, akkor a teszt sikeres lesz, mivel az elvárt viselkedést érzékeli. Ha a getOrderById metódus üres Optional-t ad vissza, akkor a NoSuchElementException kivétel dobódik, amit a assertThrows metódus megfelelően kezel. Ezáltal a teszt ellenőrzi, hogy a getOrderById helyesen dob-e kivételt az üres Optional esetén.
+
     @Test
     void getOrders_shouldReturnListOfOrders() {
         // Arrange
@@ -101,7 +101,7 @@ class OrderServiceTest {
         });
     }
 
-    // saveOrder_shouldSaveOrderAndProcessCart metódus
+
     @Test
     void saveOrder_shouldSaveOrderAndProcessCart() {
         // Arrange
@@ -120,18 +120,19 @@ class OrderServiceTest {
         person.setCart(cart);
 
         // Act
-        Order order = orderService.saveOrder(request, person);
+        orderService.saveOrder(request, person);
 
-        // Assert
-        // Itt újrahasználjuk az order objektumot, amit a saveOrder metódusban használtunk
-        verify(cartService, times(1)).processCartItemsAndCreateOrder(cart, order);
-        verify(orderRepository, times(1)).save(order);
-//        assertEquals(1, order.getOrderItems().size());
-        verify(cartService, times(1)).save(cart);
-//        assertTrue(cart.getCartItems().isEmpty());
-        verify(personService, times(1)).updatePerson(order, person, request);
+
+        verify(cartService, times(1)).processCartItemsAndCreateOrder(any(Cart.class), any(Order.class));//ezek nem kötelezők csak ha void methodot tesztlek , a mockokat nem kötelező megnézni hogy meghivodtak e azt majd a saját service tesztjében
+        verify(orderRepository, times(1)).save(any(Order.class));
+        verify(cartService, times(1)).save(any(Cart.class));
+        verify(personService, times(1)).updatePerson(any(Order.class), any(Person.class), any());
     }
 
 }
 
-//Az assertThrows metódus arra szolgál, hogy tesztelje, hogy egy adott kódrészlet kivételt dob-e a futás során. A lambda kifejezésben lévő kódot hívja meg, és ellenőrzi, hogy az adott kód valóban dob-e kivételt, és ha igen, akkor a várt kivételtípus-e a dobott kivétel. Ebben az esetben az orderService.getOrderById(orderId) hívás kivételt dob, ha az üres Optional-t kapja vissza, és az assertThrows metódus ezt a kivételt ellenőrzi. Ha a dobott kivétel egy NoSuchElementException, akkor a teszt sikeres lesz. Ezáltal a teszt azt ellenőrzi, hogy a getOrderById metódus helyesen dob-e kivételt az üres Optional esetén. Nagyszerűen foglaltad össze!
+//A Mockito azt várja, hogy ha matchereket használsz, akkor minden argumentumhoz matchert kell használnod, nem keverheted a matchereket a "nyers" értékekkel.
+//
+//Ebben az esetben a processCartItemsAndCreateOrder metódus első paramétere egy konkrét Cart objektum (ami rendben van, ha ez a metódus csak ezzel a konkrét objektummal hívható meg a teszt során), de a második paraméterhez any() matchert használsz.
+//
+//Ha a metódusnak több paramétere van és már használsz matchert, akkor mindkét paraméterhez matchert kell használnod. Ebben az esetben az első paraméterhez is használhatsz egy matchert, például eq(cart)-ot, ha pontosan azt a Cart objektumot várod, vagy any(Cart.class), ha bármilyen Cart objektum megfelelő lehet.
