@@ -43,4 +43,4 @@ jobs:
       - name: Build and push Docker images
         run: |
           docker-compose build
-          ddocker-compose push nagylorinc/plant_shopp
+          docker-compose push nagylorinc/plant_shop
