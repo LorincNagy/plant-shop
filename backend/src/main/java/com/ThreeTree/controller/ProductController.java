@@ -29,9 +29,14 @@ public class ProductController {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+//    @GetMapping
+//    public List<NewProductResponse> getProductsInRange(@RequestParam int start, @RequestParam int end) {
+//        return productService.findProductsInRange(start + 1, end);
+//    }
+
     @GetMapping
-    public List<NewProductResponse> getProductsInRange(@RequestParam int start, @RequestParam int end) {
-        return productService.findProductsInRange(start + 1, end);
+    public List<NewProductResponse> getAllProducts() {
+        return productService.getProducts();
     }
 
     @GetMapping("/allProductsSize")
