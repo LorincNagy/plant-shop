@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "dist")));
 // API proxy konfiguráció, ha szükséges
 app.use(
   "/api",
-  createProxyMiddleware({ target: "http://backend:8080/", changeOrigin: true })
+  createProxyMiddleware({ target: "http://localhost:8080/", changeOrigin: true })
 );
 
 // Minden egyéb útvonalra küldd vissza az index.html-t
