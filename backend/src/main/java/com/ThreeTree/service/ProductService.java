@@ -5,6 +5,9 @@ import com.ThreeTree.dto.NewProductResponse;
 import com.ThreeTree.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,5 +64,23 @@ public class ProductService {
                 product.getImage(),
                 product.getProductId()
         );
+    }
+
+    public List<NewProductResponse> findProductsInRange(int start, int end) {
+        List<Product> products = productRepository.findProductsInRange(start, end);
+        return convertToNewProductResponseList(products);
+    }
+
+    private List<NewProductResponse> convertToNewProductResponseList(List<Product> products) {
+        return products.stream()
+                .map(product -> new NewProductResponse(
+                        product.getName(),
+                        product.getSku(),
+                        product.getDescription(),
+                        product.getPrice(),
+                        product.getStock(),
+                        product.getImage(),
+                        product.getProductId()))
+                .collect(Collectors.toList());
     }
 }

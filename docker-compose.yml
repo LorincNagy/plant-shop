@@ -5,7 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: DockerfileBackend
-    image: ${DOCKER_HUB_USERNAME}/backend-image-name:tag
+    image: ${DOCKER_HUB_USERNAME}/backend:tag
     ports:
       - "8080:8080"
     environment:
@@ -21,7 +21,7 @@ services:
     build:
       context: ./frontend
       dockerfile: DockerfileFrontend
-    image: ${DOCKER_HUB_USERNAME}/frontend-image-name:tag
+    image: ${DOCKER_HUB_USERNAME}/frontend:tag
     ports:
       - "3000:3000"
 

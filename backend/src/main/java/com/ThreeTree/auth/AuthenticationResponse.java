@@ -1,10 +1,13 @@
 package com.ThreeTree.auth;
 
+import com.ThreeTree.dto.NewPersonResponse;
 import com.ThreeTree.model.Person;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @Builder
@@ -13,16 +16,8 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
 
     private String token;
+    private Date expirationTime;
     private boolean success;
-
-    private Person user;
-
-    public Person getUser() {
-        return user;
-    }
-
-    public void setUser(Person user) {
-        this.user = user;
-    }
+    private NewPersonResponse user;
 }
 
