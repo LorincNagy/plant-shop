@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+###enviroment variables###
+secret.properties
+.idea
+*.iws
+*.iml
+*.ipr

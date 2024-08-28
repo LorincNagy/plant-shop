@@ -1,6 +1,5 @@
 package com.ThreeTree.service;
 
-import com.ThreeTree.service.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
