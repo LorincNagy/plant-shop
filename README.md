@@ -106,7 +106,7 @@ This will start the Express server, serving the static files on port 3000. You c
 http://localhost:3000
 
 3. Alternatively, Using Docker Compose
-If you prefer to use Docker for running the application, you can utilize Docker Compose. Simply run the following command to start both the frontend and backend services:
+If you prefer to use Docker for running the application, you can utilize Docker Compose. Simply run the following command to start the frontend and backend services, as well as the PostgreSQL database:
 
 docker-compose up -d
 
