@@ -1,29 +1,30 @@
-version: '3'
+version: "3"
 services:
   backend:
     container_name: threetree-backend
     build:
       context: ./backend
       dockerfile: DockerfileBackend
-    image: ${DOCKER_HUB_USERNAME}/backend:tag
-    ports:
-      - "8080:8080"
+    image: backend:tag
     environment:
-      DB_HOST: ${DB_HOST}
+      DB_HOST: db
       DB_PORT: ${DB_PORT}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       USER_EMAIL: ${USER_EMAIL}
       USER_PASSWORD: ${USER_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+    ports:
+      - "8080:8080" # Host 8080 -> Konténer 8080
 
   frontend:
     container_name: threetree-frontend
     build:
       context: ./frontend
       dockerfile: DockerfileFrontend
-    image: ${DOCKER_HUB_USERNAME}/frontend:tag
+    image: frontend:tag
     ports:
-      - "3000:3000"
+      - "3000:3000" # Host 3000 -> Konténer 3000
 
   db:
     container_name: threetree-db
@@ -36,4 +37,4 @@ services:
     volumes:
       - /data/postgres
     ports:
-      - "5532:5432"
+      - "5532:5432" # Host 5532 -> Konténer 5432
