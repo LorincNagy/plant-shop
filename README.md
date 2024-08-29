@@ -1,162 +1,134 @@
 # Plant-Shop - Spring Boot Project
 
-## Project Overview
-
+Project Overview
 The Plant-Shop project is developed as a web application designed to efficiently manage plant orders and purchases. It utilizes a wide range of technologies, including Spring Boot and Spring Data JPA for backend development, PostgreSQL for database management, and React for the frontend. This comprehensive solution offers seamless plant ordering and purchasing capabilities and has been Dockerized for simplified deployment and management.
 
 ## Technology Stack
 
-## Frontend:
+Frontend
+JavaScript/ES6
+React
+HTML/CSS
+Material UI
+Backend
+Spring Boot
+Spring Data JPA
+JPA (Java Persistence API)
+Hibernate
+PostgreSQL
 
-- JavaScript/ES6
-- React
-- HTML/CSS
-- Material UI
 
-## Backend:
+## Server Side
 
-- Spring Boot
-- Spring Data JPA
-- JPA (Java Persistence API)
-- Hibernate
-- PostgreSQL
-
-# Server side
-
-## Database Configuration
-
+Database Configuration
 Create the PostgreSQL Database:
 
-1. Install PostgreSQL if it's not already installed.
-   Start the PostgreSQL database server.
-   Create a Database:
+Install PostgreSQL if it's not already installed.
+
+Start the PostgreSQL database server.
+
+### Create a Database
 
 Create a new database on the PostgreSQL server. For example, you can use the following command in the psql command-line or an admin tool:
 
 CREATE DATABASE your_database_name;
+Configuration File Setup:
 
-2. Configuration File Setup
-   The necessary environment variables for the proper functioning of the project are set up in the following steps:
+The necessary environment variables for the proper functioning of the project are set up in the following steps:
+Create the .env file:
+You need to store the required data, such as secret keys and database access credentials, in the .env file. Do not upload this file to GitHub!
 
-1. Create the secret.properties file
-   You need to store the required data, such as secret keys and database access credentials, in the secret.properties file. Do not upload this file to GitHub!
+Example structure of the .env file:
 
-Example structure of the secret.properties file:
 
-# PostgreSQL database settings
+### PostgreSQL database settings
 
 DB_HOST=
 DB_PORT=
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
 
-# Secret key for JWT signing
+### Secret key for JWT signing
 
 SECRET_KEY=your_secret_key
 
-Additionally, consider setting any other environment variables that your application may require for proper operation. For example:
+### Other environment variables
 
-USER_EMAIL: Your user's gmail email address
-USER_PASSWORD: Your Google application password for authentication
-
+USER_EMAIL=your_email_address
+USER_PASSWORD=your_google_app_password
 After setting these environment variables, the application will use them to establish a connection to the PostgreSQL database. Make sure you have configured these variables with the correct values for your project to work as expected.
 
-## Running the Application
+### Running the Server side
 
-Change to the '/backend' directory by using the following command:
+Change to the backend directory:
+
 cd ./backend
-
-To run the Spring Boot application use command:
+Run the Spring Boot application:
 
 mvn spring-boot:run
 
-## Alternatively, you can use Docker Compose:
 
-3. Use Docker Compose:
-   docker-compose up -d
+## Client Side
 
-The application will start in a Docker container, and it will also run on port 8080 by default.
-
-## React Frontend Configuration for Docker
-
-For deploying your React application, you have two primary options depending on your development and production needs. You can configure the React app to run with its own development server for live reloading features, or you can serve it through an Express server for a more production-like environment.
-
-## Option 1: Running with React Development Server
-
-To run your React application in a Docker container using the React development server, which is useful for development due to its live reloading capability, follow this configuration in your DockerfileFrontend:
-
-## BUILD REACT FRONTEND:
-
-FROM node:18.14.0-alpine as frontend
-WORKDIR /app/frontend
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
-COPY . .
-CMD ["npm", "run", "dev"]
-
-By default, this server runs on port 5173 so make sure your docker-compose.yml maps this port correctly to access the application on localhost:5173.
-
-## Option 2: Serving through Express Server
-
-## BUILD REACT FRONTEND:
-
-FROM node:18.14.0-alpine as frontend
-WORKDIR /app/frontend
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-## BUILD EXPRESS FRONTEND SERVER:
-
-FROM node:18.14.0-alpine as express-server
-WORKDIR /app/express-server
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
-COPY server.js .
-COPY --from=frontend /app/frontend/build ./static
-EXPOSE 3000
-CMD ["node", "server.js"]
-
-The Express server listens on port 3000, so make sure your docker-compose.yml maps this port correctly to access the application on localhost:3000.
-
-# Client side
-
-## Install Dependencies
+Install Dependencies
+Navigate to the frontend directory:
 
 cd ./frontend
+Install the dependencies:
+
 npm install
-Proxy
+Proxy Configuration:
 Pay attention to the port of your REST API. By default, it will bind to port 8080, and the frontend proxy settings depend on this configuration. If you change the port of the backend for any reason, don't forget to update the proxy settings in ./frontend/package.json accordingly.
 
-## Running the Code
+### Running the Client side
 
-To run the code, navigate to the "./frontend" directory and execute the following command:
+1. Starting the Frontend with Vite
+To start the frontend development server using Vite, navigate to the ./frontend directory in your terminal. Once there, execute the following command:
+
 npm run dev
-This will start your frontend using the Vite package on port 5173. You can access the application in your preferred web browser by opening the following URL: http://localhost:5173
+This command will start the Vite development server on port 5173. You can then open your preferred web browser and access the application at:
+
+http://localhost:5173
+
+2. Building and Serving the Application with Express
+If you'd like to serve the application using an Express server, you'll first need to build the static files. To do this, follow these steps:
+
+Build the Static Files:
+In the ./frontend directory, run the following command to generate the production-ready static files:
+
+npm run build
+Start the Express Server:
+Once the build process is complete, start the Express server by running:
+
+node server.js
+This will start the Express server, serving the static files on port 3000. You can then access the application in your browser at:
+
+http://localhost:3000
+
+3. Alternatively, Using Docker Compose
+If you prefer to use Docker for running the application, you can utilize Docker Compose. Simply run the following command to start both the frontend and backend services:
+
+docker-compose up -d
+
 
 ## Running Unit Tests
-
 To ensure the quality and functionality of our backend services, comprehensive unit tests have been implemented. These tests can be executed to verify the behavior of individual units of code and ensure that they meet our expected outcomes.
 
-## How to Run Tests
+### How to Run Tests
 
-Navigating to the Backend Directory: First, navigate to the backend directory of the Plant-Shop project where the unit tests are located. You can do this by opening a command prompt or terminal and running the following command:
+Navigating to the Backend Directory:
+First, navigate to the backend directory of the Plant-Shop project where the unit tests are located. You can do this by opening a command prompt or terminal and running the following command:
 
 cd D:\Own Projects\plant-shop\backend
 This will change your current directory to the backend part of the Plant-Shop project.
 
-## Executing the Tests
+Executing the Tests:
+Once you are in the backend directory, you can run the unit tests by executing the following command:
 
-Once you are in the backend directory, you can run the unit tests by executing the mvn test command. This command will trigger Maven to run all the unit tests defined in the project:
-
-## mvn test
-
-Ensure that Maven is installed and configured properly on your system to execute this command successfully.
+mvn test
+This command will trigger Maven to run all the unit tests defined in the project. Ensure that Maven is installed and configured properly on your system to execute this command successfully.
 
 Locating Unit Tests
 The unit tests for the backend services can be found within the Backend/src/test directory. This directory contains test classes for various components of the application, each designed to test specific functionalities and ensure they operate as expected.
-By running these tests regularly, you contribute to the stability and reliability of the Plant-Shop project, helping us maintain a high standard of quality for all backend functionalities.
+
+By running these tests regularly, you contribute to the stability and reliability of the Plant-Shop project, helping maintain a high standard of quality for all backend functionalities.
