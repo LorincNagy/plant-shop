@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Toolbar from "@mui/material/Toolbar";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import { useCart } from "./CartProvider";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Calculator from "./Calculator";
+import React, { useState } from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import { useCart } from './CartProvider';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Calculator from './Calculator';
 
 function Checkout() {
   const { cartitems, setCartItems, handleSignOut } = useCart();
   const [customerInfo, setCustomerInfo] = useState({
-    address: "",
-    email: "",
-    phone: "",
+    address: '',
+    email: '',
+    phone: '',
   });
   const [totalAmount, setTotalAmount] = useState(0);
   const navigate = useNavigate();
@@ -28,22 +28,22 @@ function Checkout() {
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Megakadályozza az űrlap alapértelmezett elküldését
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (!token) {
-      console.error("Nincs token a localStorage-ban.");
+      console.error('Nincs token a localStorage-ban.');
       return;
     }
 
     const confirmOrder = window.confirm(
-      "Are you sure you want to place the order?"
+      'Are you sure you want to place the order?',
     );
     if (confirmOrder) {
       try {
-        const response = await fetch("/api/orders", {
-          method: "POST",
+        const response = await fetch('/api/orders', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
@@ -55,12 +55,12 @@ function Checkout() {
         });
         if (response.ok) {
           setCartItems([]);
-          navigate("/thank-you");
+          navigate('/thank-you');
         } else {
-          console.error("Order placement failed");
+          console.error('Order placement failed');
         }
       } catch (error) {
-        console.error("Error placing order:", error);
+        console.error('Error placing order:', error);
       }
     }
   };
@@ -76,7 +76,7 @@ function Checkout() {
     <Container component="main" maxWidth="sm">
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Typography variant="h6" color="inherit" noWrap>
             Plantify Checkout
           </Typography>
@@ -84,11 +84,11 @@ function Checkout() {
             variant="contained"
             onClick={handleSignOut}
             sx={{
-              backgroundColor: "#FF5733",
-              "&:hover": {
-                backgroundColor: "#FF8040",
+              backgroundColor: '#FF5733',
+              '&:hover': {
+                backgroundColor: '#FF8040',
               },
-              color: "white",
+              color: 'white',
             }}
           >
             Sign out
@@ -106,7 +106,7 @@ function Checkout() {
         {cartitems.map((item, index) => (
           <Box
             key={index}
-            sx={{ display: "flex", justifyContent: "space-between", my: 2 }}
+            sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}
           >
             <Typography>
               {item.name} (x{item.quantity})
@@ -139,10 +139,10 @@ function Checkout() {
             required
             sx={{ mt: 2 }}
           />
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
             <Button
               variant="contained"
-              onClick={() => navigate("/cart")}
+              onClick={() => navigate('/cart')}
               sx={{ mt: 3, ml: 1 }}
             >
               Back to Cart

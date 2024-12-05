@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import CardActions from "@mui/material/CardActions";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import PaginationControlled from "./PaginationControlled.jsx";
-import { useCart } from "./CartProvider";
-import { useNavigate } from "react-router-dom";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import React, { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
+import PaginationControlled from './PaginationControlled.jsx';
+import { useCart } from './CartProvider';
+import { useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         Plantify
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -37,18 +37,18 @@ const getStockStyles = (product) => {
   const stock = product.stock;
   if (stock <= 0) {
     return {
-      quantityColor: "red",
-      message: "Out of stock",
+      quantityColor: 'red',
+      message: 'Out of stock',
     };
   } else if (stock <= 5) {
     return {
-      quantityColor: "orange",
-      message: `Only ${stock} ${stock === 1 ? "item" : "items"} left`,
+      quantityColor: 'orange',
+      message: `Only ${stock} ${stock === 1 ? 'item' : 'items'} left`,
     };
   } else {
     return {
-      quantityColor: "inherit",
-      message: "",
+      quantityColor: 'inherit',
+      message: '',
     };
   }
 };
@@ -56,16 +56,16 @@ const getStockStyles = (product) => {
 const customTheme = createTheme({
   palette: {
     background: {
-      default: "#f9fbe7",
+      default: '#f9fbe7',
     },
   },
   components: {
     MuiTextField: {
       styleOverrides: {
         root: {
-          "& .focused": {
-            color: "#FF5733 !important",
-            borderColor: "#FF5733 !important",
+          '& .focused': {
+            color: '#FF5733 !important',
+            borderColor: '#FF5733 !important',
           },
         },
       },
@@ -74,21 +74,21 @@ const customTheme = createTheme({
 });
 
 const fetchProducts = async () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (!token) {
-    console.error("Nincs token a localStorage-ban.");
+    console.error('Nincs token a localStorage-ban.');
     return null;
   }
 
   try {
-    const response = await fetch("/api/products", {
+    const response = await fetch('/api/products', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error("Hiba történt a védett erőforrások lekérése során.");
+      throw new Error('Hiba történt a védett erőforrások lekérése során.');
     }
 
     let products = await response.json();
@@ -102,7 +102,7 @@ const fetchProducts = async () => {
 
     return productsWithQuantity;
   } catch (error) {
-    console.error("Hiba történt a termékek lekérése során:", error);
+    console.error('Hiba történt a termékek lekérése során:', error);
     return null;
   }
 };
@@ -123,13 +123,13 @@ export default function Products() {
   const [productQuantities, setProductQuantities] = useState({});
   const [snackbarInfo, setSnackbarInfo] = useState({
     open: false,
-    message: "",
-    severity: "info",
+    message: '',
+    severity: 'info',
   });
   const navigate = useNavigate();
 
   const handleNavigateToOrders = () => {
-    navigate("/orders");
+    navigate('/orders');
   };
 
   const handleQuantityChange = (productId, newValue) => {
@@ -161,20 +161,20 @@ export default function Products() {
         if (product.stock === 0) {
           setSnackbarInfo({
             open: true,
-            message: "This product is out of stock.",
-            severity: "error",
+            message: 'This product is out of stock.',
+            severity: 'error',
           });
         } else if (product.stock <= 5) {
           setSnackbarInfo({
             open: true,
             message:
-              "Low stock warning: This product has limited stock available.",
-            severity: "warning",
+              'Low stock warning: This product has limited stock available.',
+            severity: 'warning',
           });
         }
 
         const existingCartItemIndex = cartitems.findIndex(
-          (item) => item.productId === product.productId
+          (item) => item.productId === product.productId,
         );
 
         let updatedCartItems = [];
@@ -200,23 +200,23 @@ export default function Products() {
 
         setSnackbarInfo({
           open: true,
-          message: "Product added to cart successfully.",
-          severity: "success",
+          message: 'Product added to cart successfully.',
+          severity: 'success',
         });
       } else {
         setSnackbarInfo({
           open: true,
-          message: "Please add a quantity before adding to cart.",
-          severity: "warning",
+          message: 'Please add a quantity before adding to cart.',
+          severity: 'warning',
         });
       }
     } else {
       setSnackbarInfo({
         open: true,
         message: `You cannot add more than ${product.stock} ${
-          product.stock === 1 ? "item" : "items"
+          product.stock === 1 ? 'item' : 'items'
         } to the cart.`,
-        severity: "warning",
+        severity: 'warning',
       });
     }
   };
@@ -242,9 +242,9 @@ export default function Products() {
 
   const containerStyle = {
     backgroundImage: `url('https://images.unsplash.com/photo-1603912699214-92627f304eb6?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2825')`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    minHeight: "100vh",
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    minHeight: '100vh',
   };
 
   return (
@@ -254,9 +254,9 @@ export default function Products() {
         <Box sx={containerStyle}>
           <Box
             sx={{
-              position: "fixed",
-              top: "1em",
-              left: "1em",
+              position: 'fixed',
+              top: '1em',
+              left: '1em',
               zIndex: 2,
             }}
           >
@@ -264,9 +264,9 @@ export default function Products() {
               onClick={handleSignOut}
               variant="contained"
               sx={{
-                backgroundColor: "#FF5733",
-                "&:hover": {
-                  backgroundColor: "#FF8040",
+                backgroundColor: '#FF5733',
+                '&:hover': {
+                  backgroundColor: '#FF8040',
                 },
               }}
             >
@@ -278,29 +278,29 @@ export default function Products() {
             variant="h2"
             color="#ffe0b2"
             sx={{
-              color: "#ffe0b2",
-              textAlign: "center",
-              position: "absolute",
-              top: "22%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              color: '#ffe0b2',
+              textAlign: 'center',
+              position: 'absolute',
+              top: '22%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
               zIndex: 1,
-              fontFamily: "Roboto",
-              fontSize: "16.5em",
-              textShadow: "0px 4px 4px rgba(0, 0, 0, 1)",
-              fontWeight: "Medium",
-              width: "100%",
+              fontFamily: 'Roboto',
+              fontSize: '16.5em',
+              textShadow: '0px 4px 4px rgba(0, 0, 0, 1)',
+              fontWeight: 'Medium',
+              width: '100%',
             }}
           >
             Plantify
           </Typography>
           <Typography
             sx={{
-              position: "fixed",
+              position: 'fixed',
               top: 0,
               right: 0,
               zIndex: 1,
-              padding: "1em",
+              padding: '1em',
             }}
           >
             <Button
@@ -310,15 +310,15 @@ export default function Products() {
               component={RouterLink}
               to="/cart"
               sx={{
-                backgroundColor: "#FF5733",
-                "&:hover": {
-                  backgroundColor: "#FF8040",
+                backgroundColor: '#FF5733',
+                '&:hover': {
+                  backgroundColor: '#FF8040',
                 },
-                marginRight: "10px",
+                marginRight: '10px',
               }}
             >
               <ShoppingCartIcon />
-              <span style={{ marginLeft: "10px" }}>{totalQuantity}</span>
+              <span style={{ marginLeft: '10px' }}>{totalQuantity}</span>
             </Button>
             <Button
               color="primary"
@@ -326,9 +326,9 @@ export default function Products() {
               variant="contained"
               onClick={handleNavigateToOrders}
               sx={{
-                backgroundColor: "#FF5733",
-                "&:hover": {
-                  backgroundColor: "#FF8040",
+                backgroundColor: '#FF5733',
+                '&:hover': {
+                  backgroundColor: '#FF8040',
                 },
               }}
             >
@@ -341,9 +341,9 @@ export default function Products() {
           sx={{
             py: 4, // Itt állítsd be a kívánt padding értéket
             mt: 4,
-            background: "#ffe0b2", // Ezt az értéket adtuk hozzá
-            borderRadius: "10px", // Kerekített sarkok
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.9)", // Homályosított árnyék
+            background: '#ffe0b2', // Ezt az értéket adtuk hozzá
+            borderRadius: '10px', // Kerekített sarkok
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.9)', // Homályosított árnyék
           }}
           maxWidth="md"
         >
@@ -361,18 +361,18 @@ export default function Products() {
                 >
                   <Card
                     sx={{
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      backgroundColor: "#ffcc80",
-                      borderRadius: "10px",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.8)",
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      backgroundColor: '#ffcc80',
+                      borderRadius: '10px',
+                      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.8)',
                     }}
                   >
                     <CardMedia
                       component="div"
                       sx={{
-                        pt: "86.25%",
+                        pt: '86.25%',
                       }}
                       image={product.image}
                     />
@@ -381,15 +381,15 @@ export default function Products() {
                         {product.name}
                       </Typography>
 
-                      <div style={{ marginBottom: "6px" }}></div>
+                      <div style={{ marginBottom: '6px' }}></div>
 
                       <Typography paragraph>{product.description}</Typography>
 
-                      <div style={{ marginBottom: "6px" }}></div>
+                      <div style={{ marginBottom: '6px' }}></div>
 
                       <Typography>Price: {product.price}</Typography>
 
-                      <div style={{ marginBottom: "6px" }}></div>
+                      <div style={{ marginBottom: '6px' }}></div>
 
                       <Typography>Available: {product.stock}</Typography>
                     </CardContent>
@@ -401,16 +401,16 @@ export default function Products() {
                       onChange={(e) =>
                         handleQuantityChange(
                           product.productId,
-                          parseInt(e.target.value, 10)
+                          parseInt(e.target.value, 10),
                         )
                       }
                       InputProps={{
                         sx: {
-                          "& .MuiInput-input:focus": {
-                            backgroundColor: "#FF5733", // Narancssárga háttérszín fókuszban
-                            color: "#FFFFFF", // Fehér szöveg fókuszban
-                            borderColor: "#FF5733 !important", // Narancssárga keret fókuszban
-                            outline: "none", // Eltávolítja a beépített fókusz keretet
+                          '& .MuiInput-input:focus': {
+                            backgroundColor: '#FF5733', // Narancssárga háttérszín fókuszban
+                            color: '#FFFFFF', // Fehér szöveg fókuszban
+                            borderColor: '#FF5733 !important', // Narancssárga keret fókuszban
+                            outline: 'none', // Eltávolítja a beépített fókusz keretet
                           },
                           color: quantityColor, // Mennyiség színének beállítása
                         },
@@ -432,10 +432,10 @@ export default function Products() {
                         size="small"
                         onClick={() => handleAddToCart(product)}
                         sx={{
-                          backgroundColor: "#FF5733", // Saját háttérszín
-                          color: "#FFFFFF", // Saját szövegszín
-                          "&:hover": {
-                            backgroundColor: "#FF8040", // Saját háttérszín egér fölé helyezéskor
+                          backgroundColor: '#FF5733', // Saját háttérszín
+                          color: '#FFFFFF', // Saját szövegszín
+                          '&:hover': {
+                            backgroundColor: '#FF8040', // Saját háttérszín egér fölé helyezéskor
                           },
                         }}
                       >
@@ -456,7 +456,7 @@ export default function Products() {
         </Container>
       </main>
 
-      <Box sx={{ bgcolor: "#ffe0b2", p: 6, mt: 4 }} component="footer">
+      <Box sx={{ bgcolor: '#ffe0b2', p: 6, mt: 4 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Visit Our Store
         </Typography>
@@ -479,7 +479,7 @@ export default function Products() {
         <Alert
           onClose={handleCloseSnackbar}
           severity={snackbarInfo.severity}
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           {snackbarInfo.message}
         </Alert>

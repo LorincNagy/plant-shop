@@ -1,23 +1,23 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartitems, setCartItems] = useState(() => {
-    const savedCartItems = localStorage.getItem("cartItems");
+    const savedCartItems = localStorage.getItem('cartItems');
     return savedCartItems ? JSON.parse(savedCartItems) : [];
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartitems));
+    localStorage.setItem('cartItems', JSON.stringify(cartitems));
   }, [cartitems]);
 
   const handleSignOut = () => {
     // setCartItems([]);
-    localStorage.removeItem("token");
-    navigate("/signin");
+    localStorage.removeItem('token');
+    navigate('/signin');
   };
 
   const handleRemoveFromCart = (productId) => {
@@ -32,63 +32,63 @@ export function CartProvider({ children }) {
 
   const sendRemoveRequestToBackend = async (productId) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        console.error("Nincs token a localStorage-ban.");
+        console.error('Nincs token a localStorage-ban.');
         return;
       }
 
       const response = await fetch(`/api/cart/${productId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Hiba történt a törlés során.");
+        throw new Error('Hiba történt a törlés során.');
       }
 
-      console.log("A termék sikeresen eltávolítva a kosárból.");
+      console.log('A termék sikeresen eltávolítva a kosárból.');
     } catch (error) {
-      console.error("Hiba történt a törlés során:", error);
+      console.error('Hiba történt a törlés során:', error);
     }
   };
 
   const handleEmptyCart = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
 
       if (!token) {
-        console.log("No token found.");
+        console.log('No token found.');
         return;
       }
 
-      const response = await fetch("/api/cart/empty-cart", {
-        method: "DELETE",
+      const response = await fetch('/api/cart/empty-cart', {
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
       const data = await response.json();
-      console.log("Server response:", data);
+      console.log('Server response:', data);
       setCartItems([]);
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error('An error occurred:', error);
     }
   };
 
   const sendCartToBackend = async (cartItems) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        console.error("Nincs token a localStorage-ban.");
+        console.error('Nincs token a localStorage-ban.');
         return;
       }
 
@@ -97,22 +97,22 @@ export function CartProvider({ children }) {
         quantity: item.quantity,
       }));
 
-      const response = await fetch("/api/cart", {
-        method: "POST",
+      const response = await fetch('/api/cart', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(itemsToSend),
       });
 
       if (!response.ok) {
-        throw new Error("Hiba történt a kosár elküldése során.");
+        throw new Error('Hiba történt a kosár elküldése során.');
       }
 
-      console.log("A kosár sikeresen elküldve a backendnek.");
+      console.log('A kosár sikeresen elküldve a backendnek.');
     } catch (error) {
-      console.error("Hiba történt a kosár elküldése során:", error);
+      console.error('Hiba történt a kosár elküldése során:', error);
     }
   };
 

@@ -1,13 +1,13 @@
-import React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import { useCart } from "./CartProvider";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import CardMedia from "@mui/material/CardMedia";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Calculator from "./Calculator";
+import React from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import { useCart } from './CartProvider';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import CardMedia from '@mui/material/CardMedia';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Calculator from './Calculator';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -36,14 +36,14 @@ const Cart = () => {
       return;
     }
     const updatedCartItems = cartitems.map((item) =>
-      item.productId === productId ? { ...item, quantity: newQuantity } : item
+      item.productId === productId ? { ...item, quantity: newQuantity } : item,
     );
     setCartItems(updatedCartItems);
     sendCartToBackend(updatedCartItems);
   };
 
   const handlePlaceOrder = () => {
-    navigate("/checkout");
+    navigate('/checkout');
   };
 
   const cartContent =
@@ -53,34 +53,34 @@ const Cart = () => {
           <Card
             key={`cartItem_${item.id}_${index}`}
             sx={{
-              marginBottom: "16px",
-              borderRadius: "10px",
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.8)",
-              maxWidth: "400px",
-              margin: "0 16px 16px 0",
+              marginBottom: '16px',
+              borderRadius: '10px',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.8)',
+              maxWidth: '400px',
+              margin: '0 16px 16px 0',
             }}
           >
             <CardMedia
               component="div"
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "200px",
-                backgroundColor: "#f9fbe7",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '200px',
+                backgroundColor: '#f9fbe7',
               }}
             >
               <img
                 src={item.image}
                 alt={item.name}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </CardMedia>
             <CardContent
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
               }}
             >
               <Box>
@@ -94,10 +94,10 @@ const Cart = () => {
               </Box>
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  paddingTop: "8px",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingTop: '8px',
                 }}
               >
                 <Box>
@@ -105,18 +105,18 @@ const Cart = () => {
                     onClick={() =>
                       handleQuantityChange(item.productId, item.quantity - 1)
                     }
-                    sx={{ minWidth: "30px" }}
+                    sx={{ minWidth: '30px' }}
                   >
                     ↓
                   </Button>
-                  <Typography sx={{ display: "inline-block", mx: 1 }}>
+                  <Typography sx={{ display: 'inline-block', mx: 1 }}>
                     {item.quantity}
                   </Typography>
                   <Button
                     onClick={() =>
                       handleQuantityChange(item.productId, item.quantity + 1)
                     }
-                    sx={{ minWidth: "30px" }}
+                    sx={{ minWidth: '30px' }}
                   >
                     ↑
                   </Button>
@@ -126,9 +126,9 @@ const Cart = () => {
                   variant="outlined"
                   color="secondary"
                   sx={{
-                    backgroundColor: "#FF5733",
-                    color: "#FFFFFF",
-                    "&:hover": { backgroundColor: "#FF8040" },
+                    backgroundColor: '#FF5733',
+                    color: '#FFFFFF',
+                    '&:hover': { backgroundColor: '#FF8040' },
                   }}
                 >
                   Remove
@@ -141,37 +141,37 @@ const Cart = () => {
   return (
     <div
       style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "16px",
-        justifyContent: "center",
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '16px',
+        justifyContent: 'center',
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          width: "100%",
-          marginTop: "16px",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          width: '100%',
+          marginTop: '16px',
         }}
       >
         <Calculator cartitems={cartitems} />
 
-        <div sx={{ display: "flex", gap: "8px" }}>
+        <div sx={{ display: 'flex', gap: '8px' }}>
           <Button
             variant="outlined"
             color="secondary"
             onClick={() => {
-              navigate("/products");
+              navigate('/products');
             }}
             sx={{
-              backgroundColor: "#FF5733",
-              color: "#FFFFFF",
-              "&:hover": {
-                backgroundColor: "#FF8040",
+              backgroundColor: '#FF5733',
+              color: '#FFFFFF',
+              '&:hover': {
+                backgroundColor: '#FF8040',
               },
-              marginRight: "8px",
+              marginRight: '8px',
             }}
           >
             Close Cart
@@ -184,10 +184,10 @@ const Cart = () => {
               handleEmptyCart();
             }}
             sx={{
-              backgroundColor: "#FF5733",
-              color: "#FFFFFF",
-              "&:hover": {
-                backgroundColor: "#FF8040",
+              backgroundColor: '#FF5733',
+              color: '#FFFFFF',
+              '&:hover': {
+                backgroundColor: '#FF8040',
               },
             }}
           >
@@ -198,14 +198,14 @@ const Cart = () => {
       <Typography
         variant="h4"
         component="h2"
-        sx={{ textAlign: "center", marginBottom: "16px", flexBasis: "100%" }}
+        sx={{ textAlign: 'center', marginBottom: '16px', flexBasis: '100%' }}
       >
         Your Cart
       </Typography>
       {cartContent}
 
       {cartitems.length > 0 && (
-        <Box sx={{ width: "100%", textAlign: "center", marginTop: 2 }}>
+        <Box sx={{ width: '100%', textAlign: 'center', marginTop: 2 }}>
           <Button
             variant="contained"
             color="primary"

@@ -1,19 +1,19 @@
 // eslint-disable-next-line no-unused-vars
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -23,16 +23,16 @@ function Copyright(props) {
       align="center"
       {...props}
       sx={{
-        color: "#000000", // Fekete szín beállítása
-        marginTop: "20px", // Például a szöveg kicsit lejjebb helyezése
+        color: '#000000', // Fekete szín beállítása
+        marginTop: '20px', // Például a szöveg kicsit lejjebb helyezése
       }}
     >
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="#000000" href="https://mui.com/">
         Plantify
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -40,7 +40,7 @@ function Copyright(props) {
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#FF5733", // Narancssárga szín beállítása
+      main: '#FF5733', // Narancssárga szín beállítása
     },
   },
 });
@@ -53,39 +53,39 @@ export default function SignIn() {
     const data = new FormData(event.target);
 
     const requestBody = {
-      email: data.get("email"),
-      password: data.get("password"),
+      email: data.get('email'),
+      password: data.get('password'),
     };
 
     try {
-      const response = await fetch("/api/authenticate", {
-        method: "POST",
+      const response = await fetch('/api/authenticate', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
-        throw new Error("ERROR: Failed to send request to server.");
+        throw new Error('ERROR: Failed to send request to server.');
       } else {
-        console.log("Successfully sent request to server.");
+        console.log('Successfully sent request to server.');
         const data = await response.json();
         // Token a válaszból jön, mentés a localStorage-ban
-        localStorage.setItem("token", data.token);
+        localStorage.setItem('token', data.token);
         // Átirányítás a védett oldalra
         // window.location.href = "/products"; // Eredeti átirányítás
-        navigate("/products");
+        navigate('/products');
       }
     } catch (error) {
-      console.error("Failed to send request:", error);
+      console.error('Failed to send request:', error);
     }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
         <Grid
           item
           xs={false}
@@ -93,32 +93,32 @@ export default function SignIn() {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://images.unsplash.com/photo-1603912699214-92627f304eb6?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2825)",
-            backgroundRepeat: "no-repeat",
+              'url(https://images.unsplash.com/photo-1603912699214-92627f304eb6?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2825)',
+            backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
-              t.palette.mode === "light"
+              t.palette.mode === 'light'
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
           }}
         >
           <Box
             component="h1"
             variant="h2"
             sx={{
-              textAlign: "center",
-              position: "absolute",
-              top: "7%", // Position the text in the middle vertically
-              left: "50%", // Position the text in the middle horizontally
-              transform: "translate(-50%, -50%)", // Center the text
+              textAlign: 'center',
+              position: 'absolute',
+              top: '7%', // Position the text in the middle vertically
+              left: '50%', // Position the text in the middle horizontally
+              transform: 'translate(-50%, -50%)', // Center the text
               zIndex: 1,
-              fontFamily: "Murray Text",
-              fontSize: "10em",
-              textShadow: "0px 4px 4px rgba(0, 0, 0, 1)",
-              fontWeight: "Medium",
-              width: "100%",
-              color: "white",
+              fontFamily: 'Murray Text',
+              fontSize: '10em',
+              textShadow: '0px 4px 4px rgba(0, 0, 0, 1)',
+              fontWeight: 'Medium',
+              width: '100%',
+              color: 'white',
             }}
           ></Box>
         </Grid>
@@ -131,22 +131,22 @@ export default function SignIn() {
           elevation={6}
           square
           sx={{
-            backgroundColor: "#ffe0b2", // A háttérszín beállítása
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            backgroundColor: '#ffe0b2', // A háttérszín beállítása
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Box
             sx={{
               my: 8,
               mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "black" }}>
+            <Avatar sx={{ m: 1, bgcolor: 'black' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -169,10 +169,10 @@ export default function SignIn() {
                 autoFocus
                 InputProps={{
                   sx: {
-                    "&:focus": {
-                      backgroundColor: "#FF5733", // Narancssárga háttérszín beállítása kattintáskor
-                      borderColor: "#FF5733", // Narancssárga keret beállítása kattintáskor
-                      color: "#000000", // Fekete szöveg beállítása kattintáskor
+                    '&:focus': {
+                      backgroundColor: '#FF5733', // Narancssárga háttérszín beállítása kattintáskor
+                      borderColor: '#FF5733', // Narancssárga keret beállítása kattintáskor
+                      color: '#000000', // Fekete szöveg beállítása kattintáskor
                     },
                   },
                 }}
@@ -188,10 +188,10 @@ export default function SignIn() {
                 autoComplete="current-password"
                 InputProps={{
                   sx: {
-                    "&:focus": {
-                      backgroundColor: "#FF5733", // Narancssárga háttérszín beállítása kattintáskor
-                      borderColor: "#FF5733", // Narancssárga keret beállítása kattintáskor
-                      color: "#000000", // Fekete szöveg beállítása kattintáskor
+                    '&:focus': {
+                      backgroundColor: '#FF5733', // Narancssárga háttérszín beállítása kattintáskor
+                      borderColor: '#FF5733', // Narancssárga keret beállítása kattintáskor
+                      color: '#000000', // Fekete szöveg beállítása kattintáskor
                     },
                   },
                 }}
@@ -207,10 +207,10 @@ export default function SignIn() {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  backgroundColor: "#000000", // Alapértelmezett fekete háttérszín beállítása
-                  color: "#ffffff", // Fehér szövegszín beállítása
-                  "&:hover": {
-                    backgroundColor: "#FF5733", // Narancssárga háttérszín beállítása, amikor az egér föléviszed
+                  backgroundColor: '#000000', // Alapértelmezett fekete háttérszín beállítása
+                  color: '#ffffff', // Fehér szövegszín beállítása
+                  '&:hover': {
+                    backgroundColor: '#FF5733', // Narancssárga háttérszín beállítása, amikor az egér föléviszed
                   },
                 }}
               >
@@ -218,7 +218,7 @@ export default function SignIn() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2" style={{ color: "#212121" }}>
+                  <Link href="#" variant="body2" style={{ color: '#212121' }}>
                     Forgot password?
                   </Link>
                 </Grid>
@@ -227,7 +227,7 @@ export default function SignIn() {
                     component={RouterLink}
                     to="/signup"
                     variant="body2"
-                    style={{ color: "#212121" }}
+                    style={{ color: '#212121' }}
                   >
                     {"Don't have an account? Sign Up"}
                   </Link>

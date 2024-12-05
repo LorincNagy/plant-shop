@@ -1,17 +1,17 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -21,12 +21,12 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         Plantify
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -49,23 +49,23 @@ function getPasswordStrengthMessage(passwordStrength) {
     passwordStrength.hasLowercase &&
     passwordStrength.hasNumber
   ) {
-    return "Strong";
+    return 'Strong';
   } else if (
     passwordStrength.minLength &&
     (passwordStrength.hasUppercase ||
       passwordStrength.hasLowercase ||
       passwordStrength.hasNumber)
   ) {
-    return "Moderate";
+    return 'Moderate';
   } else {
-    return "Weak";
+    return 'Weak';
   }
 }
 
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#FF5733", // Narancssárga szín beállítása
+      main: '#FF5733', // Narancssárga szín beállítása
     },
   },
 });
@@ -84,36 +84,36 @@ export default function SignUp() {
     const data = new FormData(event.currentTarget);
 
     const requestBody = {
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      phoneNumber: data.get("phoneNumber"),
-      address: data.get("address"),
-      password: data.get("password"),
+      firstName: data.get('firstName'),
+      lastName: data.get('lastName'),
+      email: data.get('email'),
+      phoneNumber: data.get('phoneNumber'),
+      address: data.get('address'),
+      password: data.get('password'),
     };
 
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
+      const response = await fetch('/api/register', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
-        alert("This email address is already registered.");
-        throw new Error("ERROR: Failed to send request to server.");
+        alert('This email address is already registered.');
+        throw new Error('ERROR: Failed to send request to server.');
       } else {
-        console.log("Successfully sent request to server.");
+        console.log('Successfully sent request to server.');
         const data = await response.json();
-        localStorage.setItem("token", data.token);
+        localStorage.setItem('token', data.token);
 
         // Átirányítás a bejelentkezési oldalra
-        navigate("/signin");
+        navigate('/signin');
       }
     } catch (error) {
-      console.error("Failed to send request:", error);
+      console.error('Failed to send request:', error);
     }
   };
 
@@ -135,28 +135,28 @@ export default function SignUp() {
         sx={{
           backgroundImage:
             'url("https://images.unsplash.com/photo-1603912699214-92627f304eb6?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1pYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2825")',
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          minHeight: "100vh",
-          padding: "1em",
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '100vh',
+          padding: '1em',
         }}
       >
         <Container component="main" maxWidth="md">
           <CssBaseline />
           <Box
             sx={{
-              width: "100%",
-              backgroundColor: "#ffe0b2", // A háttérszín beállítása
+              width: '100%',
+              backgroundColor: '#ffe0b2', // A háttérszín beállítása
               marginTop: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              borderRadius: "2em",
-              padding: "2em",
-              boxShadow: "0px 10px 20px 0px rgba(0,0,0,1)",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              borderRadius: '2em',
+              padding: '2em',
+              boxShadow: '0px 10px 20px 0px rgba(0,0,0,1)',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "black" }}>
+            <Avatar sx={{ m: 1, bgcolor: 'black' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -229,9 +229,9 @@ export default function SignUp() {
               />
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                   mt: 2,
                 }}
               >
@@ -239,11 +239,11 @@ export default function SignUp() {
                   type="submit"
                   variant="contained"
                   sx={{
-                    width: "45%", // A gomb szélessége
-                    backgroundColor: "#000000",
-                    color: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FF5733",
+                    width: '45%', // A gomb szélessége
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    '&:hover': {
+                      backgroundColor: '#FF5733',
                     },
                   }}
                 >

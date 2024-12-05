@@ -1,15 +1,15 @@
-import React from "react";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import { CartProvider } from "./component/CartProvider";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { CartProvider } from './component/CartProvider';
 
-import Home from "./component/Home";
-import SignUp from "./component/SignUp";
-import SignIn from "./component/SignIn";
-import Cart from "./component/Cart";
-import Products from "./component/Products";
-import Checkout from "./component/CheckOut";
-import ThankYou from "./component/ThankYou";
-import Orders from "./component/Orders";
+import Home from './component/Home';
+import SignUp from './component/SignUp';
+import SignIn from './component/SignIn';
+import Cart from './component/Cart';
+import Products from './component/Products';
+import Checkout from './component/CheckOut';
+import ThankYou from './component/ThankYou';
+import Orders from './component/Orders';
 
 function App() {
   return (

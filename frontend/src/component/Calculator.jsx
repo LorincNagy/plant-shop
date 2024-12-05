@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import Typography from "@mui/material/Typography";
+import React, { useEffect } from 'react';
+import Typography from '@mui/material/Typography';
 
 const Calculator = ({ cartitems, onResult }) => {
   const totalPrice = cartitems.reduce(
     (total, item) => total + item.price * item.quantity,
-    0
+    0,
   );
 
   useEffect(() => {
-    if (typeof onResult === "function") {
+    if (typeof onResult === 'function') {
       onResult(totalPrice);
     }
   }, [totalPrice, onResult]);
