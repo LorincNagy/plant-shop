@@ -34,7 +34,7 @@ build/
 
 
 ###enviroment variables###
-secret.properties
+.env
 .idea
 *.iws
 *.iml
